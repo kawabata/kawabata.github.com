@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[A Riddle Wrapped by a Mystery]]></title>
+  <link href="http://kawabata.github.com/atom.xml" rel="self"/>
+  <link href="http://kawabata.github.com/"/>
+  <updated>2013-03-10T21:59:16+09:00</updated>
+  <id>http://kawabata.github.com/</id>
+  <author>
+    <name><![CDATA[Kawabata]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs/Lookup で Wikipedia を見る]]></title>
+    <link href="http://kawabata.github.com/blog/2013/03/10/lookup/"/>
+    <updated>2013-03-10T19:36:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/2013/03/10/lookup</id>
+    <content type="html"><![CDATA[<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Lookup の ndzim エージェント</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="http://lookup2.github.com/">Lookup</a> はEmacs上で動作する、様々な辞書やリソースを横断して検索するツー
+ルです。最近、OpenZIMファイルを読むための <code>ndzim</code> エージェントを試作
+したので紹介します。
+</p>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">OpenZIM フォーマット</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a href="http://openzim.org">OpenZIM</a> フォーマットは、Webページやそれに付随する画像データを、圧縮し
+て１ファイルにまとめるフォーマットです。主に Wikipedia 等の
+MediaWiki の記事をアーカイブするために開発された、Wikipedia 財団公認のフォー
+マットです。
+</p>
+
+<p>
+OpenZIM フォーマットの<a href="http://www.openzim.org/wiki/ZIM_file_format">内部構造</a> は、LZMAで圧縮されたチャンクの集合体で
+す。OpenZIM形式にすることで、 日本語版Wikipedia 全記事（2011年現在）
+を画像込みで 7GByte、英語版Wikipediaを画像なしで12GByte 程度まで圧縮
+します。様々な言語の Wikipeida 全記事の OpenZIMファイルがKiwixサイト
+にて<a href="http://www.kiwix.org/wiki/Wikipedia_in_all_languages">配布</a> されています。
+</p>
+</div>
+</div>
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">ZimLibのインストール</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Lookup で OpenZIM ファイルを使うには、w3m と、zimlib に付属する
+zimreader/zimsearch ツールが必要です。一般にはgithubからダウンロード
+してmakeします。（要 liblzma ）
+</p>
+
+<pre class="example">
+% git clone https://gerrit.wikimedia.org/r/p/openzim.git
+% cd cd openzim/zimlib
+% ./autogen.sh
+% ./configure
+% make
+% sudo make install
+</pre>
+</div>
+</div>
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">Lookup の設定</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Lookup で OpenZIMを使うためには、 <code>$HOME/.emacs.d/lookup/init.el</code> に
+て、ZIMファイルを入れたディレクトリを検索エージェントで設定します。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq lookup-search-agents
+      '(...
+        (ndzim <span style="color: #4E9A06;">"/path/to/dir"</span>)
+       ))
+</pre>
+</div>
+
+<p>
+上記のように設定すると、 <code>/path/to/dir</code> にある拡張子が.ZIMのファイル
+を検索エージェントが見つけます。
+</p>
+
+<p>
+<code>M-x lookup-restart</code> にて、無事に辞書選択バッファに辞書が表示されたら、
+辞書の上にカーソルを置いて、&#8221;F&#8221; を押して適当な単語で検索してみましょ
+う。検索結果はちゃんと表示されましたでしょうか？
+</p>
+
+
+<div class="figure">
+<p><img src="http://kawabata.github.com/images/2013-03-10-ndzim.png"  alt="2013-03-10-ndzim.png"/></p>nil
+</div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+</feed>
