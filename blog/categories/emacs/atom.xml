@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: emacs | A Riddle Wrapped by a Mystery]]></title>
+  <title><![CDATA[Category: emacs | A Riddle Wrapped in a Mystery]]></title>
   <link href="http://kawabata.github.com/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://kawabata.github.com/"/>
-  <updated>2013-03-11T08:45:13+09:00</updated>
+  <updated>2013-03-11T19:44:31+09:00</updated>
   <id>http://kawabata.github.com/</id>
   <author>
     <name><![CDATA[dotabata]]></name>
@@ -23,29 +23,29 @@
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="http://lookup2.github.com/">Lookup</a> はEmacs上で動作する、様々な辞書やリソースを横断して検索するツー
-ルです。最近、OpenZIMファイルを読むための <code>ndzim</code> エージェントを試作
-したので紹介します。
+ルです。最近、<a href="http://openzim.org">OpenZIM</a> 形式のファイルを検索するための <code>ndzim</code> エージェン
+トを試作したので紹介します。
 </p>
 </div>
 </div>
 
 
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">OpenZIM フォーマット</h2>
+<h2 id="sec-2">OpenZIM ファイル形式</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-<a href="http://openzim.org">OpenZIM</a> フォーマットは、Webページやそれに付随する画像データを、圧縮して
-１ファイルにまとめるフォーマットです。主に Wikipedia 等のMediaWiki の記
-事をアーカイブするために開発された、Wikipedia 財団公認のフォーマットで
-す。
+<a href="http://openzim.org">OpenZIM</a> ファイル形式は、多数のWebページやそれに付随する画像データを、圧
+縮して１ファイルにまとめるフォーマットです。主に Wikipedia 等の
+MediaWiki の記事をアーカイブするために開発された、Wikipedia 財団公認の
+フォーマットです。
 </p>
 
 <p>
-OpenZIM フォーマットの<a href="http://www.openzim.org/wiki/ZIM_file_format">内部構造</a> は、LZMAで圧縮されたチャンクの集合体です。
-OpenZIM形式にすることで、 日本語版Wikipediaの全記事（2011年現在）を画像
-込みで 7GByte、英語版Wikipediaを画像なしで12GByte 程度まで圧縮できます。
-様々な言語の Wikipeida 全記事をアーカイブした OpenZIMファイルがKiwixサ
-イトにて<a href="http://www.kiwix.org/wiki/Wikipedia_in_all_languages">配布</a> されています。
+OpenZIM の<a href="http://www.openzim.org/wiki/ZIM_file_format">内部構造</a> は、LZMA2で圧縮されたデータの集合体です。OpenZIM形式
+は、 日本語版Wikipediaの全記事（2011年現在）を画像込みで 7GByte、英語版
+Wikipediaを画像なしで12GByte 程度に圧縮できます。様々な言語の
+Wikipeida 全記事をアーカイブした OpenZIMファイルがKiwixサイトにて<a href="http://www.kiwix.org/wiki/Wikipedia_in_all_languages">配布</a>
+されています。
 </p>
 </div>
 </div>
@@ -56,10 +56,10 @@ OpenZIM形式にすることで、 日本語版Wikipediaの全記事（2011年�
 <div class="outline-text-2" id="text-3">
 <p>
 Lookup で OpenZIM ファイルを使うには、w3m と、zimlib に付属する
-zimreader/zimsearch ツールが必要です。一般にはgithubからダウンロードし
-てmakeします。（ lzmaライブラリが別途必要です。MacPorts等でlzmaライブラ
-リをインストールする場合は、CPPFLAGSやLDFLAGS環境変数を適切に設定してお
-きます。 ）
+zimreader/zimsearch ツールが必要です。zimlib は githubからインストール
+します。zimlib のコンパイルには lzma ライブラリが別途必要です。
+MacPorts等でlzmaライブラリをインストールする場合は、CPPFLAGSやLDFLAGS環
+境変数を適切に設定しておきます。 ）
 </p>
 
 <pre class="example">
@@ -78,22 +78,22 @@ zimreader/zimsearch ツールが必要です。一般にはgithubからダウン
 <h2 id="sec-4">Lookup の設定</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-Lookup で OpenZIMを使うためには、 <code>$HOME/.emacs.d/lookup/init.el</code> に
-て、ZIMファイルを入れたディレクトリを検索エージェントで設定します。
+Lookup で OpenZIMを使うためには、 <code>$HOME/.emacs.d/lookup/init.el</code> に、
+ZIMファイルを入れたディレクトリを検索エージェントで設定します。
 </p>
 
 <div class="org-src-container">
 
 <pre class="src src-emacs-lisp">(setq lookup-search-agents
       '(...
-        (ndzim <span style="color: #95e454;">"/path/to/dir"</span>)
+        (ndzim <span style="color: #ffa07a;">"/path/to/dir"</span>)
        ))
 </pre>
 </div>
 
 <p>
-上記のように設定すると、 <code>/path/to/dir</code> にある拡張子が.ZIMのファイル
-を検索エージェントが見つけます。
+上記のように設定すると、 <code>/path/to/dir</code> にある拡張子が <code>.zim</code> のファイ
+ルを検索エージェントが見つけます。
 </p>
 
 <p>
