@@ -9,9 +9,9 @@
   <meta name="author" content="dotabata">
 
   
-  <meta name="description" content="Lookup の ndzim エージェント 最近、Lookup で OpenZIM 形式のファイルを検索するための ndzim エージェン
-トを試作した。 OpenZIM について OpenZIM ファイル形式は、多数のWebページやそれに付随する画像データを、圧
-縮して１ファイルにまとめる。 &hellip;">
+  <meta name="description" content="Emacs 24.3 は山本光晴さんが早速、Mac用のパッチを公開してくださり、すでにそれ
+をEmacsのソースコードにあてたgitレポジトリを公開 してくれている方もいる。 % git clone https://github.com/railwaycat/emacs-mac-port
+% &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -67,6 +67,254 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/12/emacs23/">Emacs 24.3 リリース</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-12T23:00:00+09:00" pubdate data-updated="true">Mar 12<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Emacs 24.3 は山本光晴さんが早速、Mac用のパッチを公開してくださり、すでにそれ
+をEmacsのソースコードにあてたgitレポジトリを<a href="https://github.com/railwaycat/emacs-mac-port">公開</a> してくれている方もいる。
+</p>
+
+<pre class="example">
+% git clone https://github.com/railwaycat/emacs-mac-port
+% cd emacs-mac-port
+% ./configure --with-mac --enable-profiling --enable-mac-app
+% make -j CC="/usr/bin/gcc -std=gnu99" CFLAGS=-g3 bootstrap
+</pre>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">cl-lib</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+cl.el は従来、Emacsの内部関数と衝突するため、標準配布パッケージではマ
+クロ以外の利用が禁止されている。Emacs 24.3の cl-lib パッケージは、
+clの関数の名前空間をEmacsから分離して提供する。
+</p>
+
+<p>
+cl-lib を使えば、一般のパッケージで堂々とcl 関数を利用できる。ただし、
+例えば <code>remove-if</code> 関数は、 <code>cl-remove-if</code> と先頭に &#8220;cl-&#8221; をつける。
+</p>
+
+<p>
+Emacsとclで関数名が衝突するのは、clの便利な関数をEmacs本体がサブセット
+の形で取り込んでいった( <code>dolist</code> など)から。clパッケージの誕生から20年、
+ようやく安心して共存できるようになった。
+</p>
+
+<p>
+Emacs 24.2 以前のユーザでも cl-lib が利用できるよう、互換パッケージが
+MELPAに用意されている。逆に Emacs 24.3 ユーザはこの cl-lib をインストー
+ルしてはいけない。
+</p>
+
+<p>
+clのマクロは相変わらず、 <code>(eval-when-compile (require 'cl))</code> とすれば
+利用できる。
+</p>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">pcase.el</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Emacs 24.2 から導入された pcase が最近、どんどん使われている。やはり
+<code>cconv.el</code> でその威力で知った人が多かったのか。
+</p>
+
+<p>
+<code>pcase</code> の単純な使い方として、文字列版 <code>case</code> として使う方法がある。
+</p>
+
+<p>
+従来の <code>case</code> 文は以下のように <code>eq</code> でしか比較できないけど、
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #00ffff;">case</span> var
+  ('symb1 ....)
+  ('symb2 ....)
+  ....)
+</pre>
+</div>
+
+<p>
+<code>pcase</code> 文は <code>equal</code> での比較ができるので、以下のような分岐が書ける。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #00ffff;">pcase</span> var
+  (<span style="color: #ffa07a;">"str1"</span> ....)
+  (<span style="color: #ffa07a;">"str2"</span> ....)
+  ....)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">汎変数</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Emacs 本体に、汎変数が導入され、 <code>setf</code> もEmacs本体に組み込まれた。
+</p>
+
+<p>
+従来の変数や setq が、シンボルを変数としたのに対して、汎変数やsetfは構
+造を変数にする。構造を作ったり (construct) 、構造を分解することが統一
+表記で記述できるので、上手く使えば簡潔でわかりやすいelispが書ける。
+</p>
+</div>
+</div>
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">全体としてみると</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+今回のリリースはバグ修正が多く、目立つ機能はあまり入っていない。特に多
+言語機能。もう MULE が6.0（花散里）になって、ちょうど10年、これ以上バー
+ジョンは上がらないのかな…
+</p>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/12/dired-sort/">Dired のソート順のカスタマイズ</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-12T23:00:00+09:00" pubdate data-updated="true">Mar 12<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Dired におけるファイル名の順番</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Emacs の ファイルブラウザ dired では、ファイルの並び順を &#8220;s&#8221; キーで切り
+替える。
+</p>
+
+<p>
+切り替え順をアルファベット順・日付順の他にサイズ順やファイルの種類順で
+切り替えられるようにする。
+</p>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">GNU ls のインストール</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Mac に標準で付属する &#8220;ls&#8221; 命令は、ファイルを種類順で並び替えることがで
+きない (-Xオプション)。MacPorts 等で、GNU ls をインストールする。
+</p>
+
+<pre class="example">
+% sudo port install coreutils +with_default_names
+</pre>
+
+<p>
+オプション <code>+with_default_names</code> を付けておかないと、ls命令は &#8220;gls&#8221; 命
+令としてインストールされる。glsの方が良い場合は init.el に以下のように
+書く。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #00ffff;">when</span> (executable-find <span style="color: #ffa07a;">"gls"</span>)
+  (setq insert-directory-program <span style="color: #ffa07a;">"gls"</span>))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">dired の sort命令の拡張</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+以下に、 <code>dired-toggle-sort</code> を拡張した、 <code>dired-rotate-sort</code> を示す。
+この命令で、 <code>dired-mode-map</code> の &#8220;s&#8221; キーバインドを置き換える。これで
+&#8220;s&#8221;キーを押すたびに、diredのファイルの並び順を アルファベット順・更新
+時間順・拡張子順・サイズ順に切り替わる。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span style="color: #ff7f24;">;; </span><span style="color: #ff7f24;">dired &#12398; sort &#12434;&#25313;&#24373;&#12377;&#12427;&#12290;</span>
+(<span style="color: #00ffff;">defvar</span> <span style="color: #eedd82;">dired-sort-order</span> '(<span style="color: #ffa07a;">""</span> <span style="color: #ffa07a;">"t"</span> <span style="color: #ffa07a;">"S"</span> <span style="color: #ffa07a;">"X"</span>)
+  <span style="color: #ffa07a;">"-t (&#26178;&#38291;) -X (&#25313;&#24373;&#23376;) -S (&#12469;&#12452;&#12474;) &#12394;&#12375; (&#12450;&#12523;&#12501;&#12449;&#12505;&#12483;&#12488;&#38918;) &#12434;&#20999;&#12426;&#26367;&#12360;&#12427;&#12290;"</span>)
+(<span style="color: #00ffff;">defvar</span> <span style="color: #eedd82;">dired-sort-order-position</span> 0)
+
+(<span style="color: #00ffff;">defun</span> <span style="color: #87cefa;">dired-rotate-sort</span> ()
+  <span style="color: #ffa07a;">"Rotate dired toggle sorting order by `</span><span style="color: #ffa07a;">dired-sort-order</span><span style="color: #ffa07a;">'"</span>
+  (interactive)
+  (setq dired-sort-order-position
+        (% (1+ dired-sort-order-position) (length dired-sort-order)))
+  (setq dired-actual-switches
+        (concat dired-listing-switches (elt dired-sort-order
+                                          dired-sort-order-position)))
+  (dired-sort-<span style="color: #eedd82;">other</span> dired-actual-switches))
+(define-key dired-mode-map <span style="color: #ffa07a;">"s"</span> 'dired-rotate-sort)
+</pre>
+</div>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -198,6 +446,14 @@ ZIMファイルを入れたディレクトリを検索エージェントとし�
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/emacs23/">Emacs 24.3 リリース</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/dired-sort/">Dired のソート順のカスタマイズ</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/03/10/ndzim/">Lookup で オフラインWikipedia を閲覧する</a>
