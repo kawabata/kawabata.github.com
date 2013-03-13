@@ -5,12 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Emacs 24.3 リリース - A Riddle Wrapped in a Mystery</title>
+  <title>Emacs 24.3 雑感 - A Riddle Wrapped in a Mystery</title>
   <meta name="author" content="dotabata">
 
   
-  <meta name="description" content="Emacs 24.3 は山本光晴さんが早速、Mac用のパッチを公開してくださり、すでにそれ
-をEmacsのソースコードにあてたgitレポジトリを公開 してくれている方もいる。 % git clone https://github.com/railwaycat/emacs-mac-port
+  <meta name="description" content="Emacs 24.3 リリース直後に山本光晴さんがMac用のパッチを公開してくださり、
+それをEmacsのソースコードにあてたgitレポジトリを公開 してくれている方
+もいる。 % git clone https://github.com/railwaycat/emacs-mac-port
 % &hellip;">
   
 
@@ -70,7 +71,7 @@
   
   <header>
     
-      <h1 class="entry-title">Emacs 24.3 リリース</h1>
+      <h1 class="entry-title">Emacs 24.3 雑感</h1>
     
     
       <p class="meta">
@@ -94,8 +95,9 @@
 
 
 <div class="entry-content"><p>
-Emacs 24.3 は山本光晴さんが早速、Mac用のパッチを公開してくださり、すでにそれ
-をEmacsのソースコードにあてたgitレポジトリを<a href="https://github.com/railwaycat/emacs-mac-port">公開</a> してくれている方もいる。
+Emacs 24.3 リリース直後に山本光晴さんがMac用のパッチを公開してくださり、
+それをEmacsのソースコードにあてたgitレポジトリを<a href="https://github.com/railwaycat/emacs-mac-port">公開</a> してくれている方
+もいる。
 </p>
 
 <pre class="example">
@@ -104,6 +106,10 @@ Emacs 24.3 は山本光晴さんが早速、Mac用のパッチを公開してく
 % ./configure --with-mac --enable-profiling --enable-mac-app
 % make -j CC="/usr/bin/gcc -std=gnu99" CFLAGS=-g3 bootstrap
 </pre>
+
+<p>
+以下雑感。
+</p>
 
 <div id="outline-container-1" class="outline-2">
 <h2 id="sec-1">cl-lib</h2>
@@ -194,9 +200,13 @@ Emacs 本体に、汎変数が導入され、 <code>setf</code> もEmacs本体�
 <h2 id="sec-4">全体としてみると</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-今回のリリースはバグ修正が多く、目立つ機能はあまり入っていない。特に多
-言語機能。もう MULE が6.0（花散里）になって、ちょうど10年、これ以上バー
-ジョンは上がらないのかな…
+今回のリリースはバグ修正（特にメモリ関係）が多く、目立つ機能はあまり入っ
+ていない。特に多言語機能。MULE が6.0（花散里）になって、ちょうど10年に
+なる。
+</p>
+
+<p>
+ただし汎変数は非常に興味深いので、後日追記予定。
 </p>
 </div>
 </div>
@@ -245,8 +255,10 @@ Emacs 本体に、汎変数が導入され、 <code>setf</code> もEmacs本体�
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/03/12/dired-sort/" title="Previous Post: Dired のソート順のカスタマイズ">&laquo; Dired のソート順のカスタマイズ</a>
+        <a class="basic-alignment left" href="/blog/2013/03/11/jitsuu/" title="Previous Post: Emacsで字通を読む">&laquo; Emacsで字通を読む</a>
       
+      
+        <a class="basic-alignment right" href="/blog/2013/03/13/dired-sort/" title="Next Post: Dired のソート順のカスタマイズ">Dired のソート順のカスタマイズ &raquo;</a>
       
     </p>
   </footer>
@@ -261,11 +273,19 @@ Emacs 本体に、汎変数が導入され、 <code>setf</code> もEmacs本体�
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/03/12/emacs23/">Emacs 24.3 リリース</a>
+        <a href="/blog/2013/03/14/general-variables/">Emacsの汎変数</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/12/dired-sort/">Dired のソート順のカスタマイズ</a>
+        <a href="/blog/2013/03/13/dired-sort/">Dired のソート順のカスタマイズ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/emacs23/">Emacs 24.3 雑感</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/11/jitsuu/">Emacsで字通を読む</a>
       </li>
     
       <li class="post">

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: emacs | A Riddle Wrapped in a Mystery]]></title>
   <link href="http://kawabata.github.com/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://kawabata.github.com/"/>
-  <updated>2013-03-13T08:39:01+09:00</updated>
+  <updated>2013-03-14T00:33:06+09:00</updated>
   <id>http://kawabata.github.com/</id>
   <author>
     <name><![CDATA[dotabata]]></name>
@@ -14,13 +14,523 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Emacs 24.3 リリース]]></title>
+    <title type="html"><![CDATA[Emacsの汎変数]]></title>
+    <link href="http://kawabata.github.com/blog/2013/03/14/general-variables/"/>
+    <updated>2013-03-14T00:30:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/2013/03/14/general-variables</id>
+    <content type="html"><![CDATA[<p>
+Emacs 24.3 で導入された汎変数を使えば、ソースコードの可読性が大幅に高ま
+る可能性がある。以下に例を示す。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">setf の例</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+汎変数の代入マクロ setf を使えば、 car だけで setcar 相当が記述できる。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq a (cons 3 5))
+(setf (car a) 10)
+a
+&#8594; (10 . 5)
+</pre>
+</div>
+
+<p>
+setcar/setcdr という関数を別に覚えるよりは、学習コストは低い。同様に、
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq a (list 1 10 100 1000 10000))
+(elt a 3)
+&#8594; 1000
+(setf (elt a 3) 300)
+a
+&#8594; (1 10 100 300 10000)
+</pre>
+</div>
+
+<p>
+となる。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">setf に対応している関数</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+24.3 で、setf に対応している関数は以下の通り。setf を使えば右の関数は
+不要になる。覚える関数が減れば、プログラムの作成・保守も楽になる。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col class="left"/>
+
+<col class="left"/>
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">汎変数の対象</th>
+<th scope="col" class="left">対応する設定関数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">&#xa0;</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">aref</td>
+<td class="left">aset</td>
+</tr>
+
+<tr>
+<td class="left">car</td>
+<td class="left">setcar</td>
+</tr>
+
+<tr>
+<td class="left">cdr</td>
+<td class="left">setcdr</td>
+</tr>
+
+<tr>
+<td class="left">caar</td>
+<td class="left">setcar/car</td>
+</tr>
+
+<tr>
+<td class="left">cadr</td>
+<td class="left">setcar/cdr</td>
+</tr>
+
+<tr>
+<td class="left">cdar</td>
+<td class="left">setcdr/car</td>
+</tr>
+
+<tr>
+<td class="left">cddr</td>
+<td class="left">setcdr/cdr</td>
+</tr>
+
+<tr>
+<td class="left">elt</td>
+<td class="left">setcar/nthcdr</td>
+</tr>
+
+<tr>
+<td class="left">get</td>
+<td class="left">put</td>
+</tr>
+
+<tr>
+<td class="left">gethash</td>
+<td class="left">puthash</td>
+</tr>
+
+<tr>
+<td class="left">nth</td>
+<td class="left">nthcdr/setcar</td>
+</tr>
+
+<tr>
+<td class="left">nthcdr</td>
+<td class="left">nthcdr/setcdr</td>
+</tr>
+
+<tr>
+<td class="left">default-value</td>
+<td class="left">set-default</td>
+</tr>
+
+<tr>
+<td class="left">frame-parameter</td>
+<td class="left">set-frame-parameter</td>
+</tr>
+
+<tr>
+<td class="left">terminal-parameter</td>
+<td class="left">set-terminal-parameter</td>
+</tr>
+
+<tr>
+<td class="left">keymap-parent</td>
+<td class="left">set-keymap-parent</td>
+</tr>
+
+<tr>
+<td class="left">match-data</td>
+<td class="left">set-match-data</td>
+</tr>
+
+<tr>
+<td class="left">overlay-get</td>
+<td class="left">overlay-put</td>
+</tr>
+
+<tr>
+<td class="left">overlay-start</td>
+<td class="left">move-overlay</td>
+</tr>
+
+<tr>
+<td class="left">overlay-end</td>
+<td class="left">move-overlay</td>
+</tr>
+
+<tr>
+<td class="left">process-buffer</td>
+<td class="left">set-process-buffer</td>
+</tr>
+
+<tr>
+<td class="left">process-filter</td>
+<td class="left">set-process-filter</td>
+</tr>
+
+<tr>
+<td class="left">process-sentinel</td>
+<td class="left">set-process-sentinel</td>
+</tr>
+
+<tr>
+<td class="left">process-get</td>
+<td class="left">process-put</td>
+</tr>
+
+<tr>
+<td class="left">window-buffer</td>
+<td class="left">set-window-buffer</td>
+</tr>
+
+<tr>
+<td class="left">window-display-table</td>
+<td class="left">set-window-display-table</td>
+</tr>
+
+<tr>
+<td class="left">window-dedicated-p</td>
+<td class="left">set-window-dedicated-p</td>
+</tr>
+
+<tr>
+<td class="left">window-hscroll</td>
+<td class="left">set-window-hscroll</td>
+</tr>
+
+<tr>
+<td class="left">window-parameter</td>
+<td class="left">set-window-parameter</td>
+</tr>
+
+<tr>
+<td class="left">window-point</td>
+<td class="left">set-window-point</td>
+</tr>
+
+<tr>
+<td class="left">window-start</td>
+<td class="left">set-window-start</td>
+</tr>
+
+<tr>
+<td class="left">progn</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">let, let*</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">cond</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">if</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">cons</td>
+<td class="left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="left">logand</td>
+<td class="left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+if や logand の setf は頓智レベルかもしれない。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">汎変数の作り方</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+汎変数を使うと、構造のコンストラクタとデストラクタのペアだけで、構造に
+式を代入できる。hashの場合、これまでは make-hash-table, gethash の他に
+puthash が必要だったが、setf を使えば puthash は不要になる。
+</p>
+
+<pre class="example">
+(puthash key val table) ≅ (setf (gethash key table) val)
+</pre>
+
+<p>
+gv.el の最後には、コメントアウトされている alist-get 関数の実装例があり、
+汎変数を作る際の参考になる。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="linenr"> 1: </span>(<span style="color: #00ffff;">defun</span> <span style="color: #87cefa;">alist-get</span> (key alist)
+<span class="linenr"> 2: </span>  <span style="color: #ffa07a;">"Get the value associated to KEY in ALIST."</span>
+<span class="linenr"> 3: </span>  (<span style="color: #00ffff;">declare</span>
+<span class="linenr"> 4: </span>   (gv-expander
+<span class="linenr"> 5: </span>    (<span style="color: #00ffff;">lambda</span> (<span style="color: #00ffff;">do</span>)
+<span class="linenr"> 6: </span>      (macroexp-let2 macroexp-copyable-p k key
+<span class="linenr"> 7: </span>        (gv-letplace (getter setter) alist
+<span class="linenr"> 8: </span>          (macroexp-let2 nil p `(assoc ,k ,getter)
+<span class="linenr"> 9: </span>            (funcall do `(cdr ,p)
+<span class="linenr">10: </span>                     (<span style="color: #00ffff;">lambda</span> (v)
+<span class="linenr">11: </span>                       `(<span style="color: #00ffff;">if</span> ,p (setcdr ,p ,v)
+<span class="linenr">12: </span>                          ,(funcall setter
+<span class="linenr">13: </span>                                    `(cons (cons ,k ,v) ,getter)))))))))))
+<span class="linenr">14: </span>          (cdr (assoc key alist)))
+</pre>
+</div>
+
+<p>
+一見複雑だが、重要なのは以下の３点
+</p>
+
+<ul class="org-ul">
+<li>汎変数にしたい関数は、関数定義内で <code>(declare (gv-expander (lambda
+  (do) &#x2026;)))</code> するか、または関数定義外で <code>(put 'func 'gv-expander
+  (lambda (do arg1 arg2 &#x2026;) &#x2026;))</code> で汎変数関数を設定する。 <sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</li>
+
+<li>汎変数関数は、関数 <code>do</code> と 元関数の引数を引数にとる。そして汎変数関
+数の中では <code>do</code> の引数の形で、 <code>setter</code> 処理を行う式を出力するコード
+と <code>getter</code> 処理を行う式を出力するコードを記述する。上記の例では
+<code>getter</code> は <code>`(cdr ,p)</code> で、 <code>setter</code> は <code>(lambda (v) `(if
+  (&#x2026;.getter)))</code> となる。その際、 <code>setter</code> の中に <code>getter</code> を記述して
+も構わない。
+</li>
+
+<li><code>(gv-letplace (setter getter) place body)</code> は、上記のように書かれた汎
+変数関数に対して、 <code>place</code> リストの最初の要素の関数に対応する汎変数関
+数の <code>getter</code> 関数と <code>setter</code> 関数を取り出して、それぞれをシンボル
+<code>setter</code> <code>getter</code> に束縛する。
+</li>
+</ul>
+
+<p>
+一見複雑に見えるが、その実かなり洗練された面白い構造になっている。
+Emacsの汎変数がこのような形で設計されているのは以下の理由による。
+</p>
+
+<ul class="org-ul">
+<li><code>setter</code> プログラムと <code>getter</code> プログラムを同一関数内で記述すること
+で、辞書的束縛においては両機能で変数を共有でき（クロージャ）、互いに
+ネストしたり副作用を与えられる自由度の高いコードがかける。
+</li>
+
+<li>マクロで記述しているので高速化ができる。特にEmacsの汎変数の根幹であ
+る <code>gv-get</code> マクロは事実上コンパイラになっている。
+</li>
+</ul>
+
+<p>
+この <code>do</code> にどのような関数を入れるのかは、アプリケーションによって異な
+る。たとえば <code>setf</code> は、 <code>do</code> 関数として、 <code>setter/getter</code> 両引数のう
+ち <code>setter</code> のみを呼び出して汎変数に引数の式を入れる。また
+<code>gv-letplace</code> は、 <code>do</code> として引数の <code>setter</code> と <code>getter</code> をそのまま
+<code>(setter getter)</code> に紐づける <code>lambda</code> 関数を使っている。
+</p>
+
+<p>
+上記の例である <code>alist-get</code> は、cl.el の <code>cl-assoc</code> と同じ機能を持つ関
+数である。 <code>gv-expander</code> で設定される関数は、関数 <code>do</code>, 位置 <code>key</code>, 構
+造 <code>alist</code> を引数とする。
+</p>
+
+<p>
+<code>(macroexp-let2 macroexp-copyable-p k key &#x2026;)</code>
+により、引数 <code>key</code> がコピーされて、 <code>k</code> に代入される。
+</p>
+
+<p>
+<code>(gv-letplace (setter getter) alist &#x2026;)</code> は、 <code>alist</code> の最初の要素（
+当然 <code>alist-get</code> となる）に対応する汎変数関数（すなわち自分自身）
+に対して、その値を操作する２関数 <code>getter</code> と <code>setter</code> （すなわち自分自
+身の <code>getter</code> と <code>setter</code> プログラム）を取り出す。 <code>getter</code> は現在の
+<code>key</code> での <code>alist-get</code> の値を返し、 <code>setter</code> は引数の値を <code>alist</code> に入
+れる。
+</p>
+
+<p>
+<code>(macroexp-let2 nil p `(assoc ,k ,getter) &#x2026; )</code> で、 <code>p</code> に <code>alist</code> の
+<code>k</code> 対応値（Consセル）が入る。
+</p>
+
+<p>
+<code>setf</code> が実行されると、 <code>setf</code> 内の <code>do</code> 関数は２つめのの引数の
+<code>setter</code> を使って値を代入し、結果として得られる式を評価する。
+</p>
+
+<p>
+以下は実行例。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq a '((<span style="color: #ffa07a;">"a"</span> . <span style="color: #ffa07a;">"b"</span>) (<span style="color: #ffa07a;">"c"</span> . <span style="color: #ffa07a;">"d"</span>)))
+(alist-get <span style="color: #ffa07a;">"a"</span> a) &#8594; <span style="color: #ffa07a;">"b"</span>
+(setf (alist-get <span style="color: #ffa07a;">"a"</span> a) <span style="color: #ffa07a;">"q"</span>)
+(alist-get <span style="color: #ffa07a;">"a"</span> a) &#8594; <span style="color: #ffa07a;">"b"</span> &#8594; <span style="color: #ffa07a;">"q"</span>
+</pre>
+</div>
+
+<p>
+Emacsの汎変数を記述する gv.el は、コンパイラやモナドに通じる興味深いコー
+ドとなっている。
+</p>
+</div>
+</div>
+
+
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p><code>declare</code> 経由で汎変数関数を設定する場合、 <code>do</code> 以外の引数の追加は
+  <code>gv&#x2013;defun-declaration</code> が自動的に行なってくれる。</p>
+
+
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Dired のソート順のカスタマイズ]]></title>
+    <link href="http://kawabata.github.com/blog/2013/03/13/dired-sort/"/>
+    <updated>2013-03-13T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/2013/03/13/dired-sort</id>
+    <content type="html"><![CDATA[<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Dired におけるファイル名の順番</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Emacs の ファイルブラウザ dired では、ファイルの並び順を "s" キーで切り
+替える。
+</p>
+
+<p>
+切り替え順をアルファベット順・日付順の他にサイズ順やファイルの種類順で
+切り替えられるようにする。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">GNU ls のインストール</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Mac に標準で付属する "ls" 命令は、ファイルを種類順で並び替えることがで
+きない (-Xオプション)。MacPorts 等で、GNU ls をインストールする。
+</p>
+
+<pre class="example">
+% sudo port install coreutils +with_default_names
+</pre>
+
+<p>
+オプション <code>+with_default_names</code> を付けておかないと、ls命令は "gls" 命
+令としてインストールされる。glsの方が良い場合は init.el に以下のように
+書く。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #00ffff;">when</span> (executable-find <span style="color: #ffa07a;">"gls"</span>)
+  (setq insert-directory-program <span style="color: #ffa07a;">"gls"</span>))
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">dired の sort命令の拡張</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+以下に、 <code>dired-toggle-sort</code> を拡張した、 <code>dired-rotate-sort</code> を示す。
+この命令で、 <code>dired-mode-map</code> の "s" キーバインドを置き換える。これで
+"s"キーを押すたびに、diredのファイルの並び順を アルファベット順・更新
+時間順・拡張子順・サイズ順に切り替わる。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span style="color: #ff7f24;">;; </span><span style="color: #ff7f24;">dired &#12398; sort &#12434;&#25313;&#24373;&#12377;&#12427;&#12290;</span>
+(<span style="color: #00ffff;">defvar</span> <span style="color: #eedd82;">dired-sort-order</span> '(<span style="color: #ffa07a;">""</span> <span style="color: #ffa07a;">"t"</span> <span style="color: #ffa07a;">"S"</span> <span style="color: #ffa07a;">"X"</span>)
+  <span style="color: #ffa07a;">"-t (&#26178;&#38291;) -X (&#25313;&#24373;&#23376;) -S (&#12469;&#12452;&#12474;) &#12394;&#12375; (&#12450;&#12523;&#12501;&#12449;&#12505;&#12483;&#12488;&#38918;) &#12434;&#20999;&#12426;&#26367;&#12360;&#12427;&#12290;"</span>)
+(<span style="color: #00ffff;">defvar</span> <span style="color: #eedd82;">dired-sort-order-position</span> 0)
+
+(<span style="color: #00ffff;">defun</span> <span style="color: #87cefa;">dired-rotate-sort</span> ()
+  <span style="color: #ffa07a;">"Rotate dired toggle sorting order by `</span><span style="color: #ffa07a;">dired-sort-order</span><span style="color: #ffa07a;">'"</span>
+  (interactive)
+  (setq dired-sort-order-position
+        (% (1+ dired-sort-order-position) (length dired-sort-order)))
+  (setq dired-actual-switches
+        (concat dired-listing-switches (elt dired-sort-order
+                                          dired-sort-order-position)))
+  (dired-sort-other dired-actual-switches))
+(define-key dired-mode-map <span style="color: #ffa07a;">"s"</span> 'dired-rotate-sort)
+</pre>
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs 24.3 雑感]]></title>
     <link href="http://kawabata.github.com/blog/2013/03/12/emacs23/"/>
     <updated>2013-03-12T23:00:00+09:00</updated>
     <id>http://kawabata.github.com/blog/2013/03/12/emacs23</id>
     <content type="html"><![CDATA[<p>
-Emacs 24.3 は山本光晴さんが早速、Mac用のパッチを公開してくださり、すでにそれ
-をEmacsのソースコードにあてたgitレポジトリを<a href="https://github.com/railwaycat/emacs-mac-port">公開</a> してくれている方もいる。
+Emacs 24.3 リリース直後に山本光晴さんがMac用のパッチを公開してくださり、
+それをEmacsのソースコードにあてたgitレポジトリを<a href="https://github.com/railwaycat/emacs-mac-port">公開</a> してくれている方
+もいる。
 </p>
 
 
@@ -32,6 +542,13 @@ Emacs 24.3 は山本光晴さんが早速、Mac用のパッチを公開してく
 % ./configure --with-mac --enable-profiling --enable-mac-app
 % make -j CC="/usr/bin/gcc -std=gnu99" CFLAGS=-g3 bootstrap
 </pre>
+
+
+
+
+<p>
+以下雑感。
+</p>
 
 
 
@@ -131,9 +648,13 @@ Emacs 本体に、汎変数が導入され、 <code>setf</code> もEmacs本体�
 <h2 id="sec-4">全体としてみると</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-今回のリリースはバグ修正が多く、目立つ機能はあまり入っていない。特に多
-言語機能。もう MULE が6.0（花散里）になって、ちょうど10年、これ以上バー
-ジョンは上がらないのかな…
+今回のリリースはバグ修正（特にメモリ関係）が多く、目立つ機能はあまり入っ
+ていない。特に多言語機能。MULE が6.0（花散里）になって、ちょうど10年に
+なる。
+</p>
+
+<p>
+ただし汎変数は非常に興味深いので、後日追記予定。
 </p>
 </div>
 </div>
@@ -142,83 +663,76 @@ Emacs 本体に、汎変数が導入され、 <code>setf</code> もEmacs本体�
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Dired のソート順のカスタマイズ]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/12/dired-sort/"/>
-    <updated>2013-03-12T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/12/dired-sort</id>
-    <content type="html"><![CDATA[<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">Dired におけるファイル名の順番</h2>
+    <title type="html"><![CDATA[Emacsで字通を読む]]></title>
+    <link href="http://kawabata.github.com/blog/2013/03/11/jitsuu/"/>
+    <updated>2013-03-11T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/2013/03/11/jitsuu</id>
+    <content type="html"><![CDATA[<p>
+<a href="http://www.tranradar.net/cd-jitsuu.html">字通 </a>は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
+CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。
+</p>
+
+
+
+
+<p>
+Emacsの<a href="http://lookup2.github.com">Lookup</a> には字通CD-ROMを読むための検索エージェント <code>ndjitsuu</code> がある。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">インデックスファイルの作成</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-Emacs の ファイルブラウザ dired では、ファイルの並び順を "s" キーで切り
-替える。
-</p>
-
-<p>
-切り替え順をアルファベット順・日付順の他にサイズ順やファイルの種類順で
-切り替えられるようにする。
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">GNU ls のインストール</h2>
-<div class="outline-text-2" id="text-2">
-<p>
-Mac に標準で付属する "ls" 命令は、ファイルを種類順で並び替えることがで
-きない (-Xオプション)。MacPorts 等で、GNU ls をインストールする。
+「字通」を検索するためには、インデックスファイルを事前に作成する必要が
+ある。lookup のmisc フォルダに入っている <code>jitsuu_mk_jukugo_list.rb</code> と
+<code>jitsuu_mk_oyaji_list.rb</code> を使って、インデックスファイルを作成する。
 </p>
 
 <pre class="example">
-% sudo port install coreutils +with_default_names
+% cd ~/edicts/Jitsuu/DATA/
+% ruby jitsuu_mk_oyaji_list.rb &gt; oyaji.txt
+% ruby jitsuu_mk_jukugo_list.rb &gt; jukugo.txt
 </pre>
 
 <p>
-オプション <code>+with_default_names</code> を付けておかないと、ls命令は "gls" 命
-令としてインストールされる。glsの方が良い場合は init.el に以下のように
-書く。
+次に、生成された <code>oyaji.txt</code> と <code>jukugo.txt</code> の外字をUCS漢字コードに置
+換する。
+</p>
+
+<pre class="example">
+M-x find-file oyaji.txt
+M-x ndjitsuu-convert-gaiji-to-ucs
+M-x save-buffer
+
+M-x find-file jukugo.txt
+M-x ndjitsuu-convert-gaiji-to-ucs
+M-x save-buffer
+</pre>
+
+<p>
+<code>oyaji.txt</code> と <code>jukugo.txt</code> は DATAフォルダと同じ位置に置く。
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(<span style="color: #00ffff;">when</span> (executable-find <span style="color: #ffa07a;">"gls"</span>)
-  (setq insert-directory-program <span style="color: #ffa07a;">"gls"</span>))
+<pre class="src src-emacs-lisp">(setq lookup-search-agents
+      `(...
+        (ndjitsuu <span style="color: #ffa07a;">"~/edicts/Jitsuu"</span>)
+        ...))
 </pre>
 </div>
-</div>
-</div>
 
-
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">dired の sort命令の拡張</h2>
-<div class="outline-text-2" id="text-3">
 <p>
-以下に、 <code>dired-toggle-sort</code> を拡張した、 <code>dired-rotate-sort</code> を示す。
-この命令で、 <code>dired-mode-map</code> の "s" キーバインドを置き換える。これで
-"s"キーを押すたびに、diredのファイルの並び順を アルファベット順・更新
-時間順・拡張子順・サイズ順に切り替わる。
+<code>lookup-search-agents</code> 変数に <code>ndjitsuu</code> を加えて、 <code>M-x lookup-restart</code> すれ
+ば字通をEmacsで読めるようになる。
 </p>
 
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp"><span style="color: #ff7f24;">;; </span><span style="color: #ff7f24;">dired &#12398; sort &#12434;&#25313;&#24373;&#12377;&#12427;&#12290;</span>
-(<span style="color: #00ffff;">defvar</span> <span style="color: #eedd82;">dired-sort-order</span> '(<span style="color: #ffa07a;">""</span> <span style="color: #ffa07a;">"t"</span> <span style="color: #ffa07a;">"S"</span> <span style="color: #ffa07a;">"X"</span>)
-  <span style="color: #ffa07a;">"-t (&#26178;&#38291;) -X (&#25313;&#24373;&#23376;) -S (&#12469;&#12452;&#12474;) &#12394;&#12375; (&#12450;&#12523;&#12501;&#12449;&#12505;&#12483;&#12488;&#38918;) &#12434;&#20999;&#12426;&#26367;&#12360;&#12427;&#12290;"</span>)
-(<span style="color: #00ffff;">defvar</span> <span style="color: #eedd82;">dired-sort-order-position</span> 0)
-
-(<span style="color: #00ffff;">defun</span> <span style="color: #87cefa;">dired-rotate-sort</span> ()
-  <span style="color: #ffa07a;">"Rotate dired toggle sorting order by `</span><span style="color: #ffa07a;">dired-sort-order</span><span style="color: #ffa07a;">'"</span>
-  (interactive)
-  (setq dired-sort-order-position
-        (% (1+ dired-sort-order-position) (length dired-sort-order)))
-  (setq dired-actual-switches
-        (concat dired-listing-switches (elt dired-sort-order
-                                          dired-sort-order-position)))
-  (dired-sort-<span style="color: #eedd82;">other</span> dired-actual-switches))
-(define-key dired-mode-map <span style="color: #ffa07a;">"s"</span> 'dired-rotate-sort)
-</pre>
-</div>
+<p>
+<i>image:/images/2013-03-11-jitsuu.png</i>
+</p>
 </div>
 </div>
 
@@ -234,7 +748,7 @@ Mac に標準で付属する "ls" 命令は、ファイルを種類順で並び�
 <h2 id="sec-1">Lookup の ndzim エージェント</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-最近、<a href="http://lookup2.github.com/">Lookup</a> で <a href="http://openzim.org">OpenZIM</a> 形式のファイルを検索するための <code>ndzim</code> エージェン
+<a href="http://lookup2.github.com/">Lookup</a> で <a href="http://openzim.org">OpenZIM</a> 形式のファイルを検索するための <code>ndzim</code> エージェン
 トを試作した。
 </p>
 </div>
@@ -247,7 +761,7 @@ Mac に標準で付属する "ls" 命令は、ファイルを種類順で並び�
 <p>
 <a href="http://openzim.org">OpenZIM</a> ファイル形式は、多数のWebページやそれに付随する画像データを、圧
 縮して１ファイルにまとめる。主に Wikipedia 等の MediaWiki の記事をアー
-カイブするために開発されている。Wikipedia 財団が公認している。
+カイブするために開発されている。<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
 </p>
 
 <p>
@@ -296,10 +810,14 @@ ZIMファイルを入れたディレクトリを検索エージェントとし�
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(setq lookup-search-agents
-      '(...
-        (ndzim <span style="color: #ffa07a;">"/path/to/dir"</span>)
-       ))
+<pre class="src src-emacs-lisp"><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(setq lookup-search-agents
+</span><span class='line'>      '(...
+</span><span class='line'>        (ndzim &lt;span style="color: #ffa07a;">"/path/to/dir"&lt;/span>)
+</span><span class='line'>       ))</span></code></pre></td></tr></table></div></figure></notextile></div>
 </pre>
 </div>
 
@@ -318,6 +836,17 @@ ZIMファイルを入れたディレクトリを検索エージェントとし�
 <p><img src="http://kawabata.github.com/images/2013-03-10-ndzim.png"  alt="2013-03-10-ndzim.png"/></p>
 <p>検索サンプル</p>
 </div>
+</div>
+</div>
+
+
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p>Wikipedia 財団が公認している。</p>
+
+
 </div>
 </div>
 

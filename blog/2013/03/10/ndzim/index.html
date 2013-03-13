@@ -9,9 +9,9 @@
   <meta name="author" content="dotabata">
 
   
-  <meta name="description" content="Lookup の ndzim エージェント 最近、Lookup で OpenZIM 形式のファイルを検索するための ndzim エージェン
+  <meta name="description" content="Lookup の ndzim エージェント Lookup で OpenZIM 形式のファイルを検索するための ndzim エージェン
 トを試作した。 OpenZIM について OpenZIM ファイル形式は、多数のWebページやそれに付随する画像データを、圧
-縮して１ファイルにまとめる。 &hellip;">
+縮して１ファイルにまとめる。主に &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -97,7 +97,7 @@
 <h2 id="sec-1">Lookup の ndzim エージェント</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-最近、<a href="http://lookup2.github.com/">Lookup</a> で <a href="http://openzim.org">OpenZIM</a> 形式のファイルを検索するための <code>ndzim</code> エージェン
+<a href="http://lookup2.github.com/">Lookup</a> で <a href="http://openzim.org">OpenZIM</a> 形式のファイルを検索するための <code>ndzim</code> エージェン
 トを試作した。
 </p>
 </div>
@@ -108,7 +108,7 @@
 <p>
 <a href="http://openzim.org">OpenZIM</a> ファイル形式は、多数のWebページやそれに付随する画像データを、圧
 縮して１ファイルにまとめる。主に Wikipedia 等の MediaWiki の記事をアー
-カイブするために開発されている。Wikipedia 財団が公認している。
+カイブするために開発されている。<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
 </p>
 
 <p>
@@ -153,10 +153,14 @@ ZIMファイルを入れたディレクトリを検索エージェントとし�
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp">(setq lookup-search-agents
-      '(...
-        (ndzim <span style="color: #ffa07a;">"/path/to/dir"</span>)
-       ))
+<pre class="src src-emacs-lisp"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(setq lookup-search-agents
+</span><span class='line'>      '(...
+</span><span class='line'>        (ndzim &lt;span style="color: #ffa07a;">"/path/to/dir"&lt;/span>)
+</span><span class='line'>       ))</span></code></pre></td></tr></table></div></figure>
 </pre>
 </div>
 
@@ -177,7 +181,15 @@ ZIMファイルを入れたディレクトリを検索エージェントとし�
 </div>
 </div>
 </div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p>Wikipedia 財団が公認している。</p>
+
+
 </div>
+</div></div>
 
 
   <footer>
@@ -223,7 +235,7 @@ ZIMファイルを入れたディレクトリを検索エージェントとし�
     <p class="meta">
       
       
-        <a class="basic-alignment right" href="/blog/2013/03/12/dired-sort/" title="Next Post: Dired のソート順のカスタマイズ">Dired のソート順のカスタマイズ &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2013/03/11/jitsuu/" title="Next Post: Emacsで字通を読む">Emacsで字通を読む &raquo;</a>
       
     </p>
   </footer>
@@ -238,11 +250,19 @@ ZIMファイルを入れたディレクトリを検索エージェントとし�
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2013/03/12/emacs23/">Emacs 24.3 リリース</a>
+        <a href="/blog/2013/03/14/general-variables/">Emacsの汎変数</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2013/03/12/dired-sort/">Dired のソート順のカスタマイズ</a>
+        <a href="/blog/2013/03/13/dired-sort/">Dired のソート順のカスタマイズ</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/emacs23/">Emacs 24.3 雑感</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/11/jitsuu/">Emacsで字通を読む</a>
       </li>
     
       <li class="post">
