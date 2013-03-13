@@ -4,7 +4,7 @@
   <title><![CDATA[A Riddle Wrapped in a Mystery]]></title>
   <link href="http://kawabata.github.com/atom.xml" rel="self"/>
   <link href="http://kawabata.github.com/"/>
-  <updated>2013-03-14T00:33:06+09:00</updated>
+  <updated>2013-03-14T01:03:57+09:00</updated>
   <id>http://kawabata.github.com/</id>
   <author>
     <name><![CDATA[dotabata]]></name>
@@ -19,8 +19,8 @@
     <updated>2013-03-14T00:30:00+09:00</updated>
     <id>http://kawabata.github.com/blog/2013/03/14/general-variables</id>
     <content type="html"><![CDATA[<p>
-Emacs 24.3 で導入された汎変数を使えば、ソースコードの可読性が大幅に高ま
-る可能性がある。以下に例を示す。
+Emacs 24.3 で導入された汎変数を使えば、ソースコードの可読性が高まる可能
+性がある。
 </p>
 
 <div id="outline-container-1" class="outline-2">
@@ -278,24 +278,25 @@ a
 <p>
 if や logand の setf は頓智レベルかもしれない。
 </p>
+
+<p>
+汎変数を使うと、構造の構築子とアクセス関数のペアだけで、構造に式を代入
+できる。たとえば hash の場合、これまでは コンストラクタの
+make-hash-table, gethash の他に puthash が必要だったが、setf を使えば
+puthash は不要になる。
+</p>
+
+<pre class="example">
+(puthash key val table) ≅ (setf (gethash key table) val)
+</pre>
 </div>
 </div>
 <div id="outline-container-3" class="outline-2">
 <h2 id="sec-3">汎変数の作り方</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-汎変数を使うと、構造のコンストラクタとデストラクタのペアだけで、構造に
-式を代入できる。hashの場合、これまでは make-hash-table, gethash の他に
-puthash が必要だったが、setf を使えば puthash は不要になる。
-</p>
-
-<pre class="example">
-(puthash key val table) ≅ (setf (gethash key table) val)
-</pre>
-
-<p>
 gv.el の最後には、コメントアウトされている alist-get 関数の実装例があり、
-汎変数を作る際の参考になる。
+自分の汎変数を作る際の参考になる。
 </p>
 
 <div class="org-src-container">
@@ -318,13 +319,14 @@ gv.el の最後には、コメントアウトされている alist-get 関数の
 </div>
 
 <p>
-一見複雑だが、重要なのは以下の３点
+上記は一見複雑だが、重要なのは以下の３点である。
 </p>
 
 <ul class="org-ul">
 <li>汎変数にしたい関数は、関数定義内で <code>(declare (gv-expander (lambda
-  (do) &#x2026;)))</code> するか、または関数定義外で <code>(put 'func 'gv-expander
-  (lambda (do arg1 arg2 &#x2026;) &#x2026;))</code> で汎変数関数を設定する。 <sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
+  (do) &#x2026;)))</code> を宣言するか、または関数定義外で <code>(put 'func
+  'gv-expander (lambda (do arg1 arg2 &#x2026;) &#x2026;))</code> で汎変数関数を設定する。
+  <sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
 </li>
 
 <li>汎変数関数は、関数 <code>do</code> と 元関数の引数を引数にとる。そして汎変数関
@@ -343,14 +345,14 @@ gv.el の最後には、コメントアウトされている alist-get 関数の
 </ul>
 
 <p>
-一見複雑に見えるが、その実かなり洗練された面白い構造になっている。
-Emacsの汎変数がこのような形で設計されているのは以下の理由による。
+この方式は、かなり洗練されていて面白い。Emacsの汎変数がこのような形で設
+計されているのは以下の理由による。
 </p>
 
 <ul class="org-ul">
-<li><code>setter</code> プログラムと <code>getter</code> プログラムを同一関数内で記述すること
-で、辞書的束縛においては両機能で変数を共有でき（クロージャ）、互いに
-ネストしたり副作用を与えられる自由度の高いコードがかける。
+<li><code>setter</code> プログラムと <code>getter</code> プログラムを同一関数内で記述することで、
+辞書的束縛下で両機能で変数を共有でき（クロージャ）、互いにネストした
+り副作用を与えられる自由度の高いコードがかける。
 </li>
 
 <li>マクロで記述しているので高速化ができる。特にEmacsの汎変数の根幹であ
@@ -360,10 +362,10 @@ Emacsの汎変数がこのような形で設計されているのは以下の理
 
 <p>
 この <code>do</code> にどのような関数を入れるのかは、アプリケーションによって異な
-る。たとえば <code>setf</code> は、 <code>do</code> 関数として、 <code>setter/getter</code> 両引数のう
-ち <code>setter</code> のみを呼び出して汎変数に引数の式を入れる。また
-<code>gv-letplace</code> は、 <code>do</code> として引数の <code>setter</code> と <code>getter</code> をそのまま
-<code>(setter getter)</code> に紐づける <code>lambda</code> 関数を使っている。
+る。たとえば <code>setf</code> は、 <code>do</code> 関数として、 <code>setter/getter</code> 両引数のうち
+<code>setter</code> のみを呼び出して汎変数に引数の式を入れる。また <code>gv-letplace</code>
+は、 <code>do</code> として引数の <code>setter</code> と <code>getter</code> をそのまま <code>(setter
+getter)</code> に紐づける <code>lambda</code> 関数を使っている。
 </p>
 
 <p>
@@ -419,8 +421,8 @@ Emacsの汎変数を記述する gv.el は、コンパイラやモナドに通�
 <h2 class="footnotes">Footnotes: </h2>
 <div id="text-footnotes">
 
-<sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p><code>declare</code> 経由で汎変数関数を設定する場合、 <code>do</code> 以外の引数の追加は
-  <code>gv&#x2013;defun-declaration</code> が自動的に行なってくれる。</p>
+<sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p><code>declare</code> 経由で汎変数関数を設定する場合、 <code>do</code> 以外の引数の追
+  加は <code>gv&#x2013;defun-declaration</code> が自動的に行なってくれる。</p>
 
 
 </div>
@@ -692,16 +694,17 @@ M-x save-buffer
 ば字通をEmacsで読めるようになる。
 </p>
 
-<p>
-<i>image:/images/2013-03-11-jitsuu.png</i>
-</p>
+
+<div class="figure">
+<p><img src="http://kawabata.github.com/images/2013-03-11-jitsuu.png"  alt="2013-03-11-jitsuu.png"/></p>nil
+</div>
 </div>
 </div>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Lookup で オフラインWikipedia を閲覧する]]></title>
+    <title type="html"><![CDATA[EmacsでオフラインWikipediaを検索する]]></title>
     <link href="http://kawabata.github.com/blog/2013/03/10/ndzim/"/>
     <updated>2013-03-10T23:00:00+09:00</updated>
     <id>http://kawabata.github.com/blog/2013/03/10/ndzim</id>
@@ -718,7 +721,7 @@ M-x save-buffer
 <h2 id="sec-2">OpenZIM について</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-<a href="http://openzim.org">OpenZIM</a> ファイル形式は、多数のWebページやそれに付随する画像データを、圧
+<a href="http://openzim.org">OpenZIM</a> ファイル形式は、複数のWebページや付随する画像データを、整理・圧
 縮して１ファイルにまとめる。主に Wikipedia 等の MediaWiki の記事をアー
 カイブするために開発されている。<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
 </p>
