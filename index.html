@@ -9,11 +9,8 @@
   <meta name="author" content="dotabata">
 
   
-  <meta name="description" content="Emacs 24.3 で導入された汎変数を使えば、ソースコードの可読性が高まる可能
-性がある。 setf の例 汎変数の代入マクロ setf を使えば、 car だけで setcar 相当が記述できる。 (setq a (cons 3 5))
-(setf (car a) 10)
-a
-&#8594 &hellip;">
+  <meta name="description" content="Lookup は、タイ語辞書 を扱うことができる。 PDIC タイ語辞書 PDICの BOCUデコーダ Lookup に付属している bocu.el は、BOCU符号をデコードする。 bocu.el
+は、レジスタベースのCCL言語で記述されていて、高速に動作する。 ndpdicエージェント &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +66,287 @@ a
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/15/thai/">PDIC中日辞書をEmacsで使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-15T23:00:00+09:00" pubdate data-updated="true">Mar 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+<i>Lookup</i> は、<a href="http://www.pdicthai.com/~pdicthai/">タイ語辞書</a> を扱うことができる。
+</p>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">PDIC タイ語辞書</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+PDICの
+</p>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">BOCUデコーダ</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Lookup に付属している <code>bocu.el</code> は、BOCU符号をデコードする。 <code>bocu.el</code>
+は、レジスタベースのCCL言語で記述されていて、高速に動作する。
+</p>
+</div>
+</div>
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">ndpdicエージェント</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+ndpdicエージェントは、 <code>bocu.el</code> を利用して、PDIC辞書の検索と表示を行う。
+CJ2辞書で利用するには以下のように設定する。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="linenr">1: </span>(setq lookup-search-agents
+<span class="linenr">2: </span>      '(....
+<span class="linenr">3: </span>        (ndpdic <span style="color: #ffa07a;">"~/edicts/cj2"</span>)
+<span class="linenr">4: </span>        ...
+</pre>
+</div>
+
+<p>
+ndpdicエージェントは、PDIC辞書が入ったフォルダを指定すると、そこから拡
+張子 &#8221;<code>.dic</code>&#8221; のファイルを探し、辞書オブジェクトを生成する。
+</p>
+
+<p>
+<code>M-x lookup-restart</code> で中日辞書が現れるかを確認し、検索する。
+</p>
+
+<p>
+<i>image:/images/2013-03-15-cj2.png</i>
+</p>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/15/jitsuu/">Emacsで字通を読む</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-15T23:00:00+09:00" pubdate data-updated="true">Mar 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+<a href="http://www.tranradar.net/cd-jitsuu.html">字通 </a>は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
+CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。
+</p>
+
+<p>
+Emacsの<a href="http://lookup2.github.com">Lookup</a> で字通CD-ROMを読むための検索エージェント <code>ndjitsuu</code> を開発した。
+</p>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">インデックスファイルの作成</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+「字通」を検索するためには、インデックスファイルを事前に作成する必要が
+ある。lookup のmisc フォルダに入っている <code>jitsuu_mk_jukugo_list.rb</code>
+と~jitsuu<sub>mk</sub><sub>oyaji</sub><sub>list</sub>.rb~ を使って、インデックスファイルを作成する。
+</p>
+
+<pre class="example">
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% cd ~/edicts/Jitsuu/DATA/
+</span><span class='line'>% ruby jitsuu_mk_oyaji_list.rb &gt; oyaji.txt
+</span><span class='line'>% ruby jitsuu_mk_jukugo_list.rb &gt; jukugo.txt</span></code></pre></td></tr></table></div></figure>
+</pre>
+
+<p>
+次に、生成された oyaji.txt と jukugo.txt の外字をUCS漢字コードに置換す
+る。
+</p>
+
+<pre class="example">
+M-x find-file oyaji.txt
+M-x ndjitsuu-convert-gaiji-to-ucs
+M-x save-buffer
+
+M-x find-file jukugo.txt
+M-x ndjitsuu-convert-gaiji-to-ucs
+M-x save-buffer
+</pre>
+
+<p>
+oyaji.txt と jukugo.txt は DATAフォルダと同じ位置に置く。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq lookup-search-agents
+      `(...
+        (ndjitsuu <span style="color: #ffa07a;">"~/edicts/Jitsuu"</span>)
+        ...))
+</pre>
+</div>
+
+<p>
+<code>lookup-search-agents</code> 変数に <code>ndjitsuu</code> を加えて、 <code>M-x restart</code> すれ
+ば字通をEmacsで読めるようになる。
+</p>
+
+<p>
+<i>image:/images/2013-03-15-jitsuu.png</i>
+</p>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/03/15/cj2/">PDIC中日辞書をEmacsで使う</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-15T23:00:00+09:00" pubdate data-updated="true">Mar 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>
+Emacs <i>Lookup</i> で、<a href="http://www.karak.jp/">Karak氏</a> が作成した<a href="http://jp.soft73.com/pdic用中国語辞書-2-0/">中日辞書</a> を使う。
+</p>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">PDIC形式辞書</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="http://homepage3.nifty.com/TaN/unicode/dic-spec.html">PDIC</a> は Unicode にフル対応した辞書フォーマットで、国内の多言語辞書によ
+く利用されている。特徴として、内部文字符号として BOCU (Binary
+Ordered Compression of Unicode) と呼ばれる圧縮形式を採用している。
+</p>
+
+<p>
+BOCUはハフマン符号ほど圧縮率は大きくはないが、圧縮後の文字列が辞書式順
+序を維持しているため、辞書には適した圧縮方式である。
+</p>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">BOCUデコーダ</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Lookup に付属している <code>bocu.el</code> は、BOCU符号をデコードする。 <code>bocu.el</code>
+は、レジスタベースのCCL言語で記述されていて、高速に動作する。
+</p>
+</div>
+</div>
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">ndpdicエージェント</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+ndpdicエージェントは、 <code>bocu.el</code> を利用して、PDIC辞書の検索と表示を行う。
+CJ2辞書で利用するには以下のように設定する。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="linenr">1: </span>(setq lookup-search-agents
+<span class="linenr">2: </span>      '(....
+<span class="linenr">3: </span>        (ndpdic <span style="color: #ffa07a;">"~/edicts/cj2"</span>)
+<span class="linenr">4: </span>        ...
+</pre>
+</div>
+
+<p>
+ndpdicエージェントは、PDIC辞書が入ったフォルダを指定すると、そこから拡
+張子 &#8221;<code>.dic</code>&#8221; のファイルを探し、辞書オブジェクトを生成する。
+</p>
+
+<p>
+<code>M-x lookup-restart</code> で中日辞書が現れるかを確認し、検索する。
+</p>
+
+<p>
+<i>image:/images/2013-03-15-cj2.png</i>
+</p>
+</div>
+</div>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1008,23 +1286,23 @@ ZIMファイルを入れたディレクトリを検索エージェントとし�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/03/15/thai/">PDIC中日辞書をEmacsで使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/15/jitsuu/">Emacsで字通を読む</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/15/cj2/">PDIC中日辞書をEmacsで使う</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/03/14/general-variables/">Emacsの汎変数</a>
       </li>
     
       <li class="post">
         <a href="/blog/2013/03/13/dired-sort/">Dired のソート順のカスタマイズ</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/12/emacs23/">Emacs 24.3 雑感</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/11/jitsuu/">Emacsで字通を読む</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/03/10/ndzim/">EmacsでオフラインWikipediaを検索する</a>
       </li>
     
   </ul>

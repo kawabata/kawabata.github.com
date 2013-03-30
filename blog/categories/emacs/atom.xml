@@ -4,7 +4,7 @@
   <title><![CDATA[Category: emacs | A Riddle Wrapped in a Mystery]]></title>
   <link href="http://kawabata.github.com/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://kawabata.github.com/"/>
-  <updated>2013-03-14T08:26:23+09:00</updated>
+  <updated>2013-03-21T05:29:10+09:00</updated>
   <id>http://kawabata.github.com/</id>
   <author>
     <name><![CDATA[dotabata]]></name>
@@ -12,6 +12,229 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[PDIC中日辞書をEmacsで使う]]></title>
+    <link href="http://kawabata.github.com/blog/2013/03/15/thai/"/>
+    <updated>2013-03-15T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/2013/03/15/thai</id>
+    <content type="html"><![CDATA[<p>
+<i>Lookup</i> は、<a href="http://www.pdicthai.com/~pdicthai/">タイ語辞書</a> を扱うことができる。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">PDIC タイ語辞書</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+PDICの
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">BOCUデコーダ</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Lookup に付属している <code>bocu.el</code> は、BOCU符号をデコードする。 <code>bocu.el</code>
+は、レジスタベースのCCL言語で記述されていて、高速に動作する。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">ndpdicエージェント</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+ndpdicエージェントは、 <code>bocu.el</code> を利用して、PDIC辞書の検索と表示を行う。
+CJ2辞書で利用するには以下のように設定する。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="linenr">1: </span>(setq lookup-search-agents
+<span class="linenr">2: </span>      '(....
+<span class="linenr">3: </span>        (ndpdic <span style="color: #ffa07a;">"~/edicts/cj2"</span>)
+<span class="linenr">4: </span>        ...
+</pre>
+</div>
+
+<p>
+ndpdicエージェントは、PDIC辞書が入ったフォルダを指定すると、そこから拡
+張子 "<code>.dic</code>" のファイルを探し、辞書オブジェクトを生成する。
+</p>
+
+<p>
+<code>M-x lookup-restart</code> で中日辞書が現れるかを確認し、検索する。
+</p>
+
+<p>
+<i>image:/images/2013-03-15-cj2.png</i>
+</p>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Emacsで字通を読む]]></title>
+    <link href="http://kawabata.github.com/blog/2013/03/15/jitsuu/"/>
+    <updated>2013-03-15T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/2013/03/15/jitsuu</id>
+    <content type="html"><![CDATA[<p>
+<a href="http://www.tranradar.net/cd-jitsuu.html">字通 </a>は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
+CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。
+</p>
+
+
+
+
+<p>
+Emacsの<a href="http://lookup2.github.com">Lookup</a> で字通CD-ROMを読むための検索エージェント <code>ndjitsuu</code> を開発した。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">インデックスファイルの作成</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+「字通」を検索するためには、インデックスファイルを事前に作成する必要が
+ある。lookup のmisc フォルダに入っている <code>jitsuu_mk_jukugo_list.rb</code>
+と~jitsuu<sub>mk</sub><sub>oyaji</sub><sub>list</sub>.rb~ を使って、インデックスファイルを作成する。
+</p>
+
+<pre class="example">
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% cd ~/edicts/Jitsuu/DATA/
+</span><span class='line'>% ruby jitsuu_mk_oyaji_list.rb &gt; oyaji.txt
+</span><span class='line'>% ruby jitsuu_mk_jukugo_list.rb &gt; jukugo.txt</span></code></pre></td></tr></table></div></figure></notextile></div>
+</pre>
+
+<p>
+次に、生成された oyaji.txt と jukugo.txt の外字をUCS漢字コードに置換す
+る。
+</p>
+
+<pre class="example">
+M-x find-file oyaji.txt
+M-x ndjitsuu-convert-gaiji-to-ucs
+M-x save-buffer
+
+M-x find-file jukugo.txt
+M-x ndjitsuu-convert-gaiji-to-ucs
+M-x save-buffer
+</pre>
+
+<p>
+oyaji.txt と jukugo.txt は DATAフォルダと同じ位置に置く。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq lookup-search-agents
+      `(...
+        (ndjitsuu <span style="color: #ffa07a;">"~/edicts/Jitsuu"</span>)
+        ...))
+</pre>
+</div>
+
+<p>
+<code>lookup-search-agents</code> 変数に <code>ndjitsuu</code> を加えて、 <code>M-x restart</code> すれ
+ば字通をEmacsで読めるようになる。
+</p>
+
+<p>
+<i>image:/images/2013-03-15-jitsuu.png</i>
+</p>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PDIC中日辞書をEmacsで使う]]></title>
+    <link href="http://kawabata.github.com/blog/2013/03/15/cj2/"/>
+    <updated>2013-03-15T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/2013/03/15/cj2</id>
+    <content type="html"><![CDATA[<p>
+Emacs <i>Lookup</i> で、<a href="http://www.karak.jp/">Karak氏</a> が作成した<a href="http://jp.soft73.com/pdic用中国語辞書-2-0/">中日辞書</a> を使う。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">PDIC形式辞書</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="http://homepage3.nifty.com/TaN/unicode/dic-spec.html">PDIC</a> は Unicode にフル対応した辞書フォーマットで、国内の多言語辞書によ
+く利用されている。特徴として、内部文字符号として BOCU (Binary
+Ordered Compression of Unicode) と呼ばれる圧縮形式を採用している。
+</p>
+
+<p>
+BOCUはハフマン符号ほど圧縮率は大きくはないが、圧縮後の文字列が辞書式順
+序を維持しているため、辞書には適した圧縮方式である。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">BOCUデコーダ</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Lookup に付属している <code>bocu.el</code> は、BOCU符号をデコードする。 <code>bocu.el</code>
+は、レジスタベースのCCL言語で記述されていて、高速に動作する。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">ndpdicエージェント</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+ndpdicエージェントは、 <code>bocu.el</code> を利用して、PDIC辞書の検索と表示を行う。
+CJ2辞書で利用するには以下のように設定する。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp"><span class="linenr">1: </span>(setq lookup-search-agents
+<span class="linenr">2: </span>      '(....
+<span class="linenr">3: </span>        (ndpdic <span style="color: #ffa07a;">"~/edicts/cj2"</span>)
+<span class="linenr">4: </span>        ...
+</pre>
+</div>
+
+<p>
+ndpdicエージェントは、PDIC辞書が入ったフォルダを指定すると、そこから拡
+張子 "<code>.dic</code>" のファイルを探し、辞書オブジェクトを生成する。
+</p>
+
+<p>
+<code>M-x lookup-restart</code> で中日辞書が現れるかを確認し、検索する。
+</p>
+
+<p>
+<i>image:/images/2013-03-15-cj2.png</i>
+</p>
+</div>
+</div>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Emacsの汎変数]]></title>
@@ -518,334 +741,6 @@ Mac に標準で付属する "ls" 命令は、ファイルを種類順で並び�
 (define-key dired-mode-map <span style="color: #ffa07a;">"s"</span> 'dired-rotate-sort)
 </pre>
 </div>
-</div>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Emacs 24.3 雑感]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/12/emacs23/"/>
-    <updated>2013-03-12T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/12/emacs23</id>
-    <content type="html"><![CDATA[<p>
-Emacs 24.3 リリース直後に山本光晴さんがMac用のパッチを公開してくださり、
-それをEmacsのソースコードにあてたgitレポジトリを<a href="https://github.com/railwaycat/emacs-mac-port">公開</a> してくれている方
-もいる。
-</p>
-
-
-
-
-<pre class="example">
-% git clone https://github.com/railwaycat/emacs-mac-port
-% cd emacs-mac-port
-% ./configure --with-mac --enable-profiling --enable-mac-app
-% make -j CC="/usr/bin/gcc -std=gnu99" CFLAGS=-g3 bootstrap
-</pre>
-
-
-
-
-<p>
-以下雑感。
-</p>
-
-
-
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">cl-lib</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-cl.el は従来、Emacsの内部関数と衝突するため、標準配布パッケージではマ
-クロ以外の利用が禁止されている。Emacs 24.3の cl-lib パッケージは、
-clの関数の名前空間をEmacsから分離して提供する。
-</p>
-
-<p>
-cl-lib を使えば、一般のパッケージで堂々とcl 関数を利用できる。ただし、
-例えば <code>remove-if</code> 関数は、 <code>cl-remove-if</code> と先頭に "cl-" をつける。
-</p>
-
-<p>
-Emacsとclで関数名が衝突するのは、clの便利な関数をEmacs本体がサブセット
-の形で取り込んでいった( <code>dolist</code> など)から。clパッケージの誕生から20年、
-ようやく安心して共存できるようになった。
-</p>
-
-<p>
-Emacs 24.2 以前のユーザでも cl-lib が利用できるよう、互換パッケージが
-MELPAに用意されている。逆に Emacs 24.3 ユーザはこの cl-lib をインストー
-ルしてはいけない。
-</p>
-
-<p>
-clのマクロは相変わらず、 <code>(eval-when-compile (require 'cl))</code> とすれば
-利用できる。
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">pcase.el</h2>
-<div class="outline-text-2" id="text-2">
-<p>
-Emacs 24.2 から導入された pcase が最近、どんどん使われている。やはり
-<code>cconv.el</code> でその威力で知った人が多かったのか。
-</p>
-
-<p>
-<code>pcase</code> の単純な使い方として、文字列版 <code>case</code> として使う方法がある。
-</p>
-
-<p>
-従来の <code>case</code> 文は以下のように <code>eq</code> でしか比較できないけど、
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(<span style="color: #00ffff;">case</span> var
-  ('symb1 ....)
-  ('symb2 ....)
-  ....)
-</pre>
-</div>
-
-<p>
-<code>pcase</code> 文は <code>equal</code> での比較ができるので、以下のような分岐が書ける。
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(<span style="color: #00ffff;">pcase</span> var
-  (<span style="color: #ffa07a;">"str1"</span> ....)
-  (<span style="color: #ffa07a;">"str2"</span> ....)
-  ....)
-</pre>
-</div>
-</div>
-</div>
-
-
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">汎変数</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-Emacs 本体に、汎変数が導入され、 <code>setf</code> もEmacs本体に組み込まれた。
-</p>
-
-<p>
-従来の変数や setq が、シンボルを変数としたのに対して、汎変数やsetfは構
-造を変数にする。構造を作ったり (construct) 、構造を分解することが統一
-表記で記述できるので、上手く使えば簡潔でわかりやすいelispが書ける。
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-4" class="outline-2">
-<h2 id="sec-4">全体としてみると</h2>
-<div class="outline-text-2" id="text-4">
-<p>
-今回のリリースはバグ修正（特にメモリ関係）が多く、目立つ機能はあまり入っ
-ていない。特に多言語機能。MULE が6.0（花散里）になって、ちょうど10年に
-なる。
-</p>
-
-<p>
-ただし汎変数は非常に興味深いので、後日追記予定。
-</p>
-</div>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Emacsで字通を読む]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/11/jitsuu/"/>
-    <updated>2013-03-11T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/11/jitsuu</id>
-    <content type="html"><![CDATA[<p>
-<a href="http://www.tranradar.net/cd-jitsuu.html">字通 </a>は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
-CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。
-</p>
-
-
-
-
-<p>
-Emacsの<a href="http://lookup2.github.com">Lookup</a> には字通CD-ROMを読むための検索エージェント <code>ndjitsuu</code> がある。
-</p>
-
-
-
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">インデックスファイルの作成</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-「字通」を検索するためには、インデックスファイルを事前に作成する必要が
-ある。lookup のmisc フォルダに入っている <code>jitsuu_mk_jukugo_list.rb</code> と
-<code>jitsuu_mk_oyaji_list.rb</code> を使って、インデックスファイルを作成する。
-</p>
-
-<pre class="example">
-% cd ~/edicts/Jitsuu/DATA/
-% ruby jitsuu_mk_oyaji_list.rb &gt; oyaji.txt
-% ruby jitsuu_mk_jukugo_list.rb &gt; jukugo.txt
-</pre>
-
-<p>
-次に、生成された <code>oyaji.txt</code> と <code>jukugo.txt</code> の外字をUCS漢字コードに置
-換する。
-</p>
-
-<pre class="example">
-M-x find-file oyaji.txt
-M-x ndjitsuu-convert-gaiji-to-ucs
-M-x save-buffer
-
-M-x find-file jukugo.txt
-M-x ndjitsuu-convert-gaiji-to-ucs
-M-x save-buffer
-</pre>
-
-<p>
-<code>oyaji.txt</code> と <code>jukugo.txt</code> は DATAフォルダと同じ位置に置く。
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq lookup-search-agents
-      `(...
-        (ndjitsuu <span style="color: #ffa07a;">"~/edicts/Jitsuu"</span>)
-        ...))
-</pre>
-</div>
-
-<p>
-<code>lookup-search-agents</code> 変数に <code>ndjitsuu</code> を加えて、 <code>M-x lookup-restart</code> すれ
-ば字通をEmacsで読めるようになる。
-</p>
-
-
-<div class="figure">
-<p><img src="http://kawabata.github.com/images/2013-03-11-jitsuu.png"  alt="2013-03-11-jitsuu.png"/></p>nil
-</div>
-</div>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[EmacsでオフラインWikipediaを検索する]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/10/ndzim/"/>
-    <updated>2013-03-10T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/10/ndzim</id>
-    <content type="html"><![CDATA[<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">Lookup の ndzim エージェント</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-<a href="http://lookup2.github.com/">Lookup</a> で <a href="http://openzim.org">OpenZIM</a> 形式のファイルを検索するための <code>ndzim</code> エージェン
-トを試作した。
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">OpenZIM について</h2>
-<div class="outline-text-2" id="text-2">
-<p>
-<a href="http://openzim.org">OpenZIM</a> ファイル形式は、複数のWebページや付随する画像データを、整理・圧
-縮して１ファイルにまとめる。主に Wikipedia 等の MediaWiki の記事をアー
-カイブするために開発されている。<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
-</p>
-
-<p>
-OpenZIM の<a href="http://www.openzim.org/wiki/ZIM_file_format">内部構造</a> は、LZMA2で圧縮された多数のデータの集合体である。日
-本語版Wikipediaの全記事（2011年現在）を画像込みで 7GByte、英語版
-Wikipediaを画像なしで 12GByte 程度に圧縮できる。様々な言語のWikipeida 全
-記事をアーカイブした OpenZIMファイルがKiwixサイトにて<a href="http://www.kiwix.org/wiki/Wikipedia_in_all_languages">配布</a>されている。
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">ZimLibのインストール</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-Lookup の ndzim エージェントは、<a href="https://gerrit.wikimedia.org/r/p/openzim.git">zimlib</a> に付属するzimdump/zimsearch ツー
-ルでOpenZIMファイルの検索とデータのダンプを行い、w3mで整形する。
-</p>
-
-<p>
-zimlib のコンパイルには lzma ライブラリが別途必要。MacPorts等でlzmaラ
-イブラリをインストールする場合は、CPPFLAGSやLDFLAGS環境変数を適切に設
-定する。 
-</p>
-
-<pre class="example">
-% git clone https://gerrit.wikimedia.org/r/p/openzim.git
-% cd cd openzim/zimlib
-% ./autogen.sh
-% ./configure
-% make
-% sudo make install
-</pre>
-</div>
-</div>
-
-
-<div id="outline-container-4" class="outline-2">
-<h2 id="sec-4">Lookup の設定</h2>
-<div class="outline-text-2" id="text-4">
-<p>
-Lookup で OpenZIMを使うためには、 <code>$HOME/.emacs.d/lookup/init.el</code> に、
-ZIMファイルを入れたディレクトリを検索エージェントとして設定する。
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq lookup-search-agents
-      '(...
-        (ndzim <span style="color: #ffa07a;">"/path/to/dir"</span>)
-       ))
-</pre>
-</div>
-
-<p>
-上記のように設定すると、検索エージェントは <code>/path/to/dir</code> ディレクトリ
-内にある、拡張子が <code>.zim</code> のファイルを見つける。
-</p>
-
-<p>
-あとは他のエージェントと同様、 <code>M-x lookup-restart</code> にて、無事に辞書選
-択バッファに辞書が表示されたら、単語で検索して動作を確認。
-</p>
-
-
-<div class="figure">
-<p><img src="http://kawabata.github.com/images/2013-03-10-ndzim.png"  alt="2013-03-10-ndzim.png"/></p>
-<p>検索サンプル</p>
-</div>
-</div>
-</div>
-
-
-<div id="footnotes">
-<h2 class="footnotes">Footnotes: </h2>
-<div id="text-footnotes">
-
-<sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p>Wikipedia 財団が公認している。</p>
-
-
 </div>
 </div>
 
