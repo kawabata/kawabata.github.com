@@ -1,253 +1,104 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: emacs | A Riddle Wrapped in a Mystery]]></title>
-  <link href="http://kawabata.github.com/blog/categories/emacs/atom.xml" rel="self"/>
-  <link href="http://kawabata.github.com/"/>
-  <updated>2013-03-30T10:47:59+09:00</updated>
-  <id>http://kawabata.github.com/</id>
-  <author>
-    <name><![CDATA[dotabata]]></name>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Emacsの汎変数 - A Riddle Wrapped in a Mystery</title>
+  <meta name="author" content="dotabata">
+
+  
+  <meta name="description" content="Emacs 24.3 で導入された汎変数を使えば、ソースコードの可読性が高まる可能
+性がある。 setf の例 汎変数の代入マクロ setf を使えば、 car だけで setcar 相当が記述できる。 (setq a (cons 3 5))
+(setf (car a) 10)
+a
+&#8594 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://kawabata.github.com/blog/2013/03/14/general-variables">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="A Riddle Wrapped in a Mystery" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">A Riddle Wrapped in a Mystery</a></h1>
+  
+    <h2>中身はエニグマ・Emacs</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:kawabata.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
     
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+      <h1 class="entry-title">Emacsの汎変数</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-  <entry>
-    <title type="html"><![CDATA[PDIC中日辞書をEmacsで使う]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/15/thai/"/>
-    <updated>2013-03-15T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/15/thai</id>
-    <content type="html"><![CDATA[<p>
-<i>Lookup</i> は、<a href="http://www.pdicthai.com/~pdicthai/">タイ語辞書</a> を扱うことができる。
-</p>
 
 
+<time datetime="2013-03-14T00:30:00+09:00" pubdate data-updated="true">Mar 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
 
 
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">PDIC タイ語辞書</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-PDICの
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">BOCUデコーダ</h2>
-<div class="outline-text-2" id="text-2">
-<p>
-Lookup に付属している <code>bocu.el</code> は、BOCU符号をデコードする。 <code>bocu.el</code>
-は、レジスタベースのCCL言語で記述されていて、高速に動作する。
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">ndpdicエージェント</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-ndpdicエージェントは、 <code>bocu.el</code> を利用して、PDIC辞書の検索と表示を行う。
-CJ2辞書で利用するには以下のように設定する。
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp"><span class="linenr">1: </span>(setq lookup-search-agents
-<span class="linenr">2: </span>      '(....
-<span class="linenr">3: </span>        (ndpdic <span style="color: #ffa07a;">"~/edicts/cj2"</span>)
-<span class="linenr">4: </span>        ...
-</pre>
-</div>
-
-<p>
-ndpdicエージェントは、PDIC辞書が入ったフォルダを指定すると、そこから拡
-張子 "<code>.dic</code>" のファイルを探し、辞書オブジェクトを生成する。
-</p>
-
-<p>
-<code>M-x lookup-restart</code> で中日辞書が現れるかを確認し、検索する。
-</p>
-
-<p>
-<i>image:/images/2013-03-15-cj2.png</i>
-</p>
-</div>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Emacsで字通を読む]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/15/jitsuu/"/>
-    <updated>2013-03-15T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/15/jitsuu</id>
-    <content type="html"><![CDATA[<p>
-<a href="http://www.tranradar.net/cd-jitsuu.html">字通 </a>は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
-CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。
-</p>
-
-
-
-
-<p>
-Emacsの<a href="http://lookup2.github.com">Lookup</a> で字通CD-ROMを読むための検索エージェント <code>ndjitsuu</code> を開発した。
-</p>
-
-
-
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">インデックスファイルの作成</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-「字通」を検索するためには、インデックスファイルを事前に作成する必要が
-ある。lookup のmisc フォルダに入っている <code>jitsuu_mk_jukugo_list.rb</code>
-と~jitsuu<sub>mk</sub><sub>oyaji</sub><sub>list</sub>.rb~ を使って、インデックスファイルを作成する。
-</p>
-
-<pre class="example">
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>% cd ~/edicts/Jitsuu/DATA/
-</span><span class='line'>% ruby jitsuu_mk_oyaji_list.rb &gt; oyaji.txt
-</span><span class='line'>% ruby jitsuu_mk_jukugo_list.rb &gt; jukugo.txt</span></code></pre></td></tr></table></div></figure></notextile></div>
-</pre>
-
-<p>
-次に、生成された oyaji.txt と jukugo.txt の外字をUCS漢字コードに置換す
-る。
-</p>
-
-<pre class="example">
-M-x find-file oyaji.txt
-M-x ndjitsuu-convert-gaiji-to-ucs
-M-x save-buffer
-
-M-x find-file jukugo.txt
-M-x ndjitsuu-convert-gaiji-to-ucs
-M-x save-buffer
-</pre>
-
-<p>
-oyaji.txt と jukugo.txt は DATAフォルダと同じ位置に置く。
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq lookup-search-agents
-      `(...
-        (ndjitsuu <span style="color: #ffa07a;">"~/edicts/Jitsuu"</span>)
-        ...))
-</pre>
-</div>
-
-<p>
-<code>lookup-search-agents</code> 変数に <code>ndjitsuu</code> を加えて、 <code>M-x restart</code> すれ
-ば字通をEmacsで読めるようになる。
-</p>
-
-<p>
-<i>image:/images/2013-03-15-jitsuu.png</i>
-</p>
-</div>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[PDIC中日辞書をEmacsで使う]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/15/cj2/"/>
-    <updated>2013-03-15T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/15/cj2</id>
-    <content type="html"><![CDATA[<p>
-Emacs <i>Lookup</i> で、<a href="http://www.karak.jp/">Karak氏</a> が作成した<a href="http://jp.soft73.com/pdic用中国語辞書-2-0/">中日辞書</a> を使う。
-</p>
-
-
-
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">PDIC形式辞書</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-<a href="http://homepage3.nifty.com/TaN/unicode/dic-spec.html">PDIC</a> は Unicode にフル対応した辞書フォーマットで、国内の多言語辞書によ
-く利用されている。特徴として、内部文字符号として BOCU (Binary
-Ordered Compression of Unicode) と呼ばれる圧縮形式を採用している。
-</p>
-
-<p>
-BOCUはハフマン符号ほど圧縮率は大きくはないが、圧縮後の文字列が辞書式順
-序を維持しているため、辞書には適した圧縮方式である。
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">BOCUデコーダ</h2>
-<div class="outline-text-2" id="text-2">
-<p>
-Lookup に付属している <code>bocu.el</code> は、BOCU符号をデコードする。 <code>bocu.el</code>
-は、レジスタベースのCCL言語で記述されていて、高速に動作する。
-</p>
-</div>
-</div>
-
-
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">ndpdicエージェント</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-ndpdicエージェントは、 <code>bocu.el</code> を利用して、PDIC辞書の検索と表示を行う。
-CJ2辞書で利用するには以下のように設定する。
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp"><span class="linenr">1: </span>(setq lookup-search-agents
-<span class="linenr">2: </span>      '(....
-<span class="linenr">3: </span>        (ndpdic <span style="color: #ffa07a;">"~/edicts/cj2"</span>)
-<span class="linenr">4: </span>        ...
-</pre>
-</div>
-
-<p>
-ndpdicエージェントは、PDIC辞書が入ったフォルダを指定すると、そこから拡
-張子 "<code>.dic</code>" のファイルを探し、辞書オブジェクトを生成する。
-</p>
-
-<p>
-<code>M-x lookup-restart</code> で中日辞書が現れるかを確認し、検索する。
-</p>
-
-<p>
-<i>image:/images/2013-03-15-cj2.png</i>
-</p>
-</div>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Emacsの汎変数]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/14/general-variables/"/>
-    <updated>2013-03-14T00:30:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/14/general-variables</id>
-    <content type="html"><![CDATA[<p>
+<div class="entry-content"><p>
 Emacs 24.3 で導入された汎変数を使えば、ソースコードの可読性が高まる可能
 性がある。
 </p>
-
-
-
 
 <div id="outline-container-1" class="outline-2">
 <h2 id="sec-1">setf の例</h2>
@@ -285,8 +136,6 @@ a
 </p>
 </div>
 </div>
-
-
 <div id="outline-container-2" class="outline-2">
 <h2 id="sec-2">setf に対応している関数</h2>
 <div class="outline-text-2" id="text-2">
@@ -519,8 +368,6 @@ puthash は不要になる。
 </pre>
 </div>
 </div>
-
-
 <div id="outline-container-3" class="outline-2">
 <h2 id="sec-3">汎変数の作り方</h2>
 <div class="outline-text-2" id="text-3">
@@ -647,8 +494,6 @@ Emacsの汎変数を記述する gv.el は、コンパイラやモナドに通�
 </p>
 </div>
 </div>
-
-
 <div id="footnotes">
 <h2 class="footnotes">Footnotes: </h2>
 <div id="text-footnotes">
@@ -658,93 +503,128 @@ Emacsの汎変数を記述する gv.el は、コンパイラやモナドに通�
 
 
 </div>
-</div>
+</div></div>
 
-]]></content>
-  </entry>
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[Dired のソート順のカスタマイズ]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/13/dired-sort/"/>
-    <updated>2013-03-13T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/13/dired-sort</id>
-    <content type="html"><![CDATA[<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">Dired におけるファイル名の順番</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-Emacs の ファイルブラウザ dired では、ファイルの並び順を "s" キーで切り
-替える。
-</p>
 
-<p>
-切り替え順をアルファベット順・日付順の他にサイズ順やファイルの種類順で
-切り替えられるようにする。
-</p>
-</div>
-</div>
+<span class="byline author vcard">Posted by <span class="fn">dotabata</span></span>
+
+      
 
 
-<div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">GNU ls のインストール</h2>
-<div class="outline-text-2" id="text-2">
-<p>
-Mac に標準で付属する "ls" 命令は、ファイルを種類順で並び替えることがで
-きない (-Xオプション)。MacPorts 等で、GNU ls をインストールする。
-</p>
-
-<pre class="example">
-% sudo port install coreutils +with_default_names
-</pre>
-
-<p>
-オプション <code>+with_default_names</code> を付けておかないと、ls命令は "gls" 命
-令としてインストールされる。glsの方が良い場合は init.el に以下のように
-書く。
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(<span style="color: #00ffff;">when</span> (executable-find <span style="color: #ffa07a;">"gls"</span>)
-  (setq insert-directory-program <span style="color: #ffa07a;">"gls"</span>))
-</pre>
-</div>
-</div>
-</div>
 
 
-<div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">dired の sort命令の拡張</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-以下に、 <code>dired-toggle-sort</code> を拡張した、 <code>dired-rotate-sort</code> を示す。
-この命令で、 <code>dired-mode-map</code> の "s" キーバインドを置き換える。これで
-"s"キーを押すたびに、diredのファイルの並び順を アルファベット順・更新
-時間順・拡張子順・サイズ順に切り替わる。
-</p>
 
-<div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span style="color: #ff7f24;">;; </span><span style="color: #ff7f24;">dired &#12398; sort &#12434;&#25313;&#24373;&#12377;&#12427;&#12290;</span>
-(<span style="color: #00ffff;">defvar</span> <span style="color: #eedd82;">dired-sort-order</span> '(<span style="color: #ffa07a;">""</span> <span style="color: #ffa07a;">"t"</span> <span style="color: #ffa07a;">"S"</span> <span style="color: #ffa07a;">"X"</span>)
-  <span style="color: #ffa07a;">"-t (&#26178;&#38291;) -X (&#25313;&#24373;&#23376;) -S (&#12469;&#12452;&#12474;) &#12394;&#12375; (&#12450;&#12523;&#12501;&#12449;&#12505;&#12483;&#12488;&#38918;) &#12434;&#20999;&#12426;&#26367;&#12360;&#12427;&#12290;"</span>)
-(<span style="color: #00ffff;">defvar</span> <span style="color: #eedd82;">dired-sort-order-position</span> 0)
 
-(<span style="color: #00ffff;">defun</span> <span style="color: #87cefa;">dired-rotate-sort</span> ()
-  <span style="color: #ffa07a;">"Rotate dired toggle sorting order by `</span><span style="color: #ffa07a;">dired-sort-order</span><span style="color: #ffa07a;">'"</span>
-  (interactive)
-  (setq dired-sort-order-position
-        (% (1+ dired-sort-order-position) (length dired-sort-order)))
-  (setq dired-actual-switches
-        (concat dired-listing-switches (elt dired-sort-order
-                                          dired-sort-order-position)))
-  (dired-sort-other dired-actual-switches))
-(define-key dired-mode-map <span style="color: #ffa07a;">"s"</span> 'dired-rotate-sort)
-</pre>
-</div>
-</div>
-</div>
 
-]]></content>
-  </entry>
   
-</feed>
+
+
+<time datetime="2013-03-14T00:30:00+09:00" pubdate data-updated="true">Mar 14<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/emacs/'>emacs</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://kawabata.github.com/blog/2013/03/14/general-variables/" data-via="" data-counturl="http://kawabata.github.com/blog/2013/03/14/general-variables/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/13/dired-sort/" title="Previous Post: Dired のソート順のカスタマイズ">&laquo; Dired のソート順のカスタマイズ</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013/03/15/cj2/" title="Next Post: PDIC中日辞書をEmacsで使う">PDIC中日辞書をEmacsで使う &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/15/thai/">PDIC中日辞書をEmacsで使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/15/jitsuu/">Emacsで字通を読む</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/15/cj2/">PDIC中日辞書をEmacsで使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/14/general-variables/">Emacsの汎変数</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/13/dired-sort/">Dired のソート順のカスタマイズ</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - dotabata -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
