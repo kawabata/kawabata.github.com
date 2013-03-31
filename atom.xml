@@ -4,7 +4,7 @@
   <title><![CDATA[A Riddle Wrapped in a Mystery]]></title>
   <link href="http://kawabata.github.com/atom.xml" rel="self"/>
   <link href="http://kawabata.github.com/"/>
-  <updated>2013-03-30T10:47:59+09:00</updated>
+  <updated>2013-03-30T13:30:43+09:00</updated>
   <id>http://kawabata.github.com/</id>
   <author>
     <name><![CDATA[dotabata]]></name>
@@ -14,59 +14,303 @@
 
   
   <entry>
-    <title type="html"><![CDATA[PDIC中日辞書をEmacsで使う]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/15/thai/"/>
-    <updated>2013-03-15T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/15/thai</id>
-    <content type="html"><![CDATA[<p>
-<i>Lookup</i> は、<a href="http://www.pdicthai.com/~pdicthai/">タイ語辞書</a> を扱うことができる。
+    <title type="html"><![CDATA[Emacs で Goo のWeb辞書を利用する。]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-21-goo.html"/>
+    <updated>2013-03-21T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/goo</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. ndwebのオプション</a></li>
+<li><a href="#sec-2">2. ndweb-options</a></li>
+<li><a href="#sec-3">3. 設定</a></li>
+</ul>
+</div>
+</div>
+<p>
+<i>Lookup</i> の ndweb エージェントクラスは、世界中にあるWeb上の辞書を利用できる。
 </p>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">PDIC タイ語辞書</h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> ndwebのオプション</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-PDICの
+Lookup でWeb辞書を使用する場合は、以下のオプションを指定する。
+</p>
+
+<dl class="org-dl">
+<dt> :self </dt><dd>OpenSearch Description URL
+</dd>
+<dt> :title </dt><dd>辞書のタイトル
+</dd>
+<dt> :methods </dt><dd>辞書の検索メソッド（前方一致など）
+</dd>
+<dt> :suggestions </dt><dd>候補の選択方法 （関数ならば HTMLファイルから候補を生成、URLならば OpenSearch JSON を指定する）
+</dd>
+<dt> :results </dt><dd>選択した候補の内容を表示する URL。
+</dd>
+<dt> :method </dt><dd>HTTP Post または Get のどちらを利用するか。
+</dd>
+</dl>
+
+<p>
+なお、:self が指定されているのならば、:title, :suggestions :results :methods 等のオプションの指定は必要ない。
+これらは :self で指定された OpenSearch XML から自動的に取得される。逆に、:self がない場合は最低限、:title, 
+と :results が必須になる。
+</p>
+
+<p>
+<a href="http://mycroftproject.com/">Mycroft Project</a> では、全世界 2万以上の辞書の検索エンジンの OpenSearch
+XML が蓄積されている。ndweb エージェントの位置に、&#8221;mycroft:XXX&#8221; を指定
+すると、自動的に Mycroft のサイトからXXX の OpenSearch XML を取得して、
+辞書を設定する。
 </p>
 </div>
 </div>
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">BOCUデコーダ</h2>
+<h2 id="sec-2"><span class="section-number-2">2</span> ndweb-options</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-Lookup に付属している <code>bocu.el</code> は、BOCU符号をデコードする。 <code>bocu.el</code>
-は、レジスタベースのCCL言語で記述されていて、高速に動作する。
+ndweb-options には、goo等のようないくつかのnewebエージェント用の独自オ
+プションがプリセットされている。ndweb-options にあるWebサイトを使えば、
+自分でオプションを設定する必要なく、すぐにそのWeb辞書を利用できる。
 </p>
 </div>
 </div>
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">ndpdicエージェント</h2>
+<h2 id="sec-3"><span class="section-number-2">3</span> 設定</h2>
 <div class="outline-text-2" id="text-3">
 <p>
-ndpdicエージェントは、 <code>bocu.el</code> を利用して、PDIC辞書の検索と表示を行う。
-CJ2辞書で利用するには以下のように設定する。
+ndweb-options.el を参考に、使用したいWeb辞書のURLの &#8221;<a href="http://">http://</a>&#8221; を除いた部分を指定する。
 </p>
 
 <div class="org-src-container">
 
-<pre class="src src-emacs-lisp"><span class="linenr">1: </span>(setq lookup-search-agents
-<span class="linenr">2: </span>      '(....
-<span class="linenr">3: </span>        (ndpdic <span style="color: #ffa07a;">"~/edicts/cj2"</span>)
-<span class="linenr">4: </span>        ...
+<pre class="src src-emacs-lisp">(setq lookup-search-agents 
+      '(...
+        (ndweb <span style="color: #ffa07a;">"dictionary.goo.ne.jp/jc"</span>)
+        ...))
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="2013-03-21-goo.png"  alt="2013-03-21-goo.png"/></p>
+</div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs で Sony DD-CH10 の日中辞書を利用する。]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-19-ddch10.html"/>
+    <updated>2013-03-19T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/ddch10</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. EBXA-C</a></li>
+<li><a href="#sec-2">2. 漢字インデクサ</a></li>
+<li><a href="#sec-3">3. ピン音フィルタ</a></li>
+<li><a href="#sec-4">4. 設定</a></li>
+</ul>
+</div>
+</div>
+<p>
+<i>Lookup</i> は、かつて Sony が発売していた電子辞書 <a href="http://www.sony.co.jp/SonyInfo/News/Press_Archive/199703/97CI-022/">DD-CH10</a> CD-ROMに入っていた小学館の日中・中日辞書が利用できる。
+この辞書は語彙・例文が充実していて、発売後１５年が経過した今でも人気が高い。
+</p>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> EBXA-C</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+DD-CH10 は、電子辞書規格 EBXA を中国語向けに拡張した、これ一台限りの特別規格 EBXA-C を採用している。
+この辞書の閲覧には、EBXA-C 対応のパッチを当てた <a href="http://ikazuhiro.s206.xrea.com/staticpages/index.php/eblook">eblook</a> を利用する。
+</p>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 漢字インデクサ</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+DD-CH10 の日中辞書は平仮名とピン音でしか検索できないが、<a href="http://www31.ocn.ne.jp/~h_ishida/EBKIdx.html">EB漢字インデクサ</a> 
+を使用することで、漢字でも検索できるようになる。
+</p>
+</div>
+</div>
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> ピン音フィルタ</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Lookup の support-zhongri ファイルは、中国語の文字をピン音に直すクエリフィルタが組み込まれている。
+このクエリフィルタが使用する関数 lookup-text-hanzi-to-pinyin は、漢字をピン音に変換する。
+漢字は台湾漢字・中国漢字の両方を使用できる。複数の発音がある漢字は全ての組み合わせを返す。
+</p>
+
+<pre class="example">
+(lookup-text-hanzi-to-pinyin "重慶") ⏎
+("zhong4qing4" "chong2qing4")
+</pre>
+</div>
+</div>
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 設定</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+DD-CH10 のCD-ROMをコピーして、ndeb エージェントとしてディレクトリを指定する。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq lookup-search-agents 
+      '(...
+        (ndeb <span style="color: #ffa07a;">"~/edicts/ZHONG_RI"</span>)
+        ...))
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="2013-03-19-ddch10.png"  alt="2013-03-19-ddch10.png"/></p>
+</div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[zsh の ヒストリファイルを閲覧・編集する]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-17-zsh-history.html"/>
+    <updated>2013-03-17T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/zsh-history</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. zsh ヒストリファイルの構造</a></li>
+<li><a href="#sec-2">2. zsh ヒストリファイルのデコーダ</a></li>
+<li><a href="#sec-3">3. zsh ヒストリファイルのエンコーダ</a></li>
+<li><a href="#sec-4">4. zsh ヒストリファイルの符号体系</a></li>
+</ul>
+</div>
+</div>
+<p>
+zsh のヒストリファイル <code>/.zsh_history</code> は、ASCII以外の文字に対してエス
+ケープをしているため、通常はエディタで閲覧したり編集できない。
+</p>
+
+<p>
+Emacsで、 <code>zsh_history</code> 独自のデコーダ・エンコーダを実装することで、
+zshヒストリファイルの閲覧・編集できるようにする。
+</p>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> zsh ヒストリファイルの構造</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+zshのヒストリファイルは、保存するデータの各バイトにおいて、それが
+0x80-0x9d または 0xa0 のとき、その前に 0x83 を入れて、続くバイトの
+6bit 目を反転させるようになっている。詳細は zsh のソースコードの
+meta.c を参照。
+</p>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> zsh ヒストリファイルのデコーダ</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+以下に zshのヒストリファイルのデコーダをCCLで示す。ただし、本来はCCLは
+UCS符号を出力することになっているが、このCCLデコーダはUTF-8のバイトシー
+ケンスを出力する。（UTF-8のデコーダを別途接続する必要がある。）
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-ccl-program zsh-history-decoder
+  '(1 ((<span style="color: #00ffff;">loop</span>
+        (read-if (r0 == #x83)
+                 ((read r0) (r0 ^= #x20)))
+        (write r0)
+        (repeat))))
+  <span style="color: #ffa07a;">"decode .zsh_history file."</span>)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> zsh ヒストリファイルのエンコーダ</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-ccl-program zsh-history-encoder
+  '(2 ((<span style="color: #00ffff;">loop</span>
+        (read r0)
+        (r1 = (r0 &lt; #x9e))
+        (r2 = (r0 == #xa0))
+        (<span style="color: #00ffff;">if</span> (((r0 &gt; #x82) &amp; r1) | r2)
+            ((write #x83) (write (r0 ^ #x20)))
+          (write r0))
+        (repeat))))
+  <span style="color: #ffa07a;">"encode .zsh_history file."</span>)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> zsh ヒストリファイルの符号体系</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+上記のデコーダ・エンコーダは、UTF-8 バイト列を対象としているが、これら
+はEmacsではLatin-1に解釈されてしまう。そのため、一旦Latin-1と解釈された
+符号をUCS符号に直さなければならない。そのために、post-read-converter と、
+pre-write-converter を用意する。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #00ffff;">defun</span> <span style="color: #87cefa;">post-read-decode-utf8</span> (len)
+  (<span style="color: #00ffff;">save-excursion</span>
+    (<span style="color: #00ffff;">save-restriction</span>
+      (narrow-to-region (point) (+ (point) len))
+      (encode-coding-region (point-min) (point-max) 'latin-1)
+      (decode-coding-region (point-min) (point-max) 'utf-8)
+      (- (point-max) (point-min)))))
+
+(<span style="color: #00ffff;">defun</span> <span style="color: #87cefa;">pre-write-encode-utf8</span> (_ignored _ignored2)
+  (encode-coding-region (point-min) (point-max) 'utf-8)
+  (decode-coding-region (point-min) (point-max) 'latin-1))
 </pre>
 </div>
 
 <p>
-ndpdicエージェントは、PDIC辞書が入ったフォルダを指定すると、そこから拡
-張子 &#8221;<code>.dic</code>&#8221; のファイルを探し、辞書オブジェクトを生成する。
+上記をまとめて、zsh-history という符号化体系を作成し、これを
+<code>zsh_history</code> という文字列を含むファイルに結び付ける。
 </p>
 
-<p>
-<code>M-x lookup-restart</code> で中日辞書が現れるかを確認し、検索する。
-</p>
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-coding-system 'zsh-history <span style="color: #ffa07a;">"ZSH history"</span>
+  <span style="color: #b0c4de;">:coding-type</span> 'ccl
+  <span style="color: #b0c4de;">:charset-list</span> '(unicode)
+  <span style="color: #b0c4de;">:mnemonic</span> ?Z <span style="color: #b0c4de;">:ascii-compatible-p</span> t
+  <span style="color: #b0c4de;">:eol-type</span> 'unix
+  <span style="color: #b0c4de;">:ccl-decoder</span> 'zsh-history-decoder
+  <span style="color: #b0c4de;">:post-read-conversion</span> 'post-read-decode-utf8
+  <span style="color: #b0c4de;">:ccl-encoder</span> 'zsh-history-encoder
+  <span style="color: #b0c4de;">:pre-write-conversion</span> 'pre-write-encode-utf8)
+
+(modify-coding-system-alist 'file <span style="color: #ffa07a;">"zsh_history"</span> 'zsh-history)
+</pre>
+</div>
 
 <p>
-<i>image:/images/2013-03-15-cj2.png</i>
+なお、Emacsは保存する際に最適な符号化を方法を見つけて再割当てを行うため、
+一旦、この符号化方式でファイルを保存した後は再度、ファイルを読みなおす
+必要がある。
 </p>
 </div>
 </div>
@@ -74,10 +318,82 @@ ndpdicエージェントは、PDIC辞書が入ったフォルダを指定する�
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[PDICタイ語辞書をEmacsで使う]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-16-thai.html"/>
+    <updated>2013-03-16T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/thai</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. PDIC タイ語辞書</a></li>
+<li><a href="#sec-2">2. 漢字・ひらがなフィルタ</a></li>
+<li><a href="#sec-3">3. 設定</a></li>
+</ul>
+</div>
+</div>
+<p>
+<i>Lookup</i> は、PDICの <a href="http://www.pdicthai.com/~pdicthai/">タイ語辞書</a> を扱うことができる。
+</p>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> PDIC タイ語辞書</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+日・タイ辞書、タイ・日辞書（かな）、タイ日辞書（ローマ字）の３種類がある。
+漢字からは検索できないので、漢字語を検索したい場合はフィルタを設定する必要がある。
+</p>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 漢字・ひらがなフィルタ</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Lookup の lookup-query-filter-kanji-to-kana は、クエリの文字を漢字から
+平仮名に変換する。この関数は内部で mecab を使う
+lookup-text-get-kana-readings を呼び出している。
+</p>
+
+<pre class="example">
+(lookup-text-get-kana-readings "山本山") ⏎
+("やまもとやま" "やまもとさん")
+</pre>
+</div>
+</div>
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 設定</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+エージェントにオプションとして <code>:query-filter
+lookup-query-filter-kanji-to-kana</code> を設定する。ただし、サポートファイル
+support-pdic-thai.el がすでにこの設定をしているため、辞書IDに
+&#8220;Uni-PdicThai-JP-IPA&#8221; という文字列が含まれているならば、ユーザが何か設
+定する必要はない。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq lookup-search-agents 
+      '(...
+        (ndpdic <span style="color: #ffa07a;">"~/edicts/PdicThai"</span>)
+        ...))
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="2013-03-16-thai.png"  alt="2013-03-16-thai.png"/></p>
+</div>
+</div>
+</div>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Emacsで字通を読む]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/15/jitsuu/"/>
+    <link href="http://kawabata.github.com/blog/2013-03-15-jitsuu.html"/>
     <updated>2013-03-15T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/15/jitsuu</id>
+    <id>http://kawabata.github.com/blog/jitsuu</id>
     <content type="html"><![CDATA[<p>
 <a href="http://www.tranradar.net/cd-jitsuu.html">字通 </a>は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
 CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。
@@ -148,18 +464,28 @@ oyaji.txt と jukugo.txt は DATAフォルダと同じ位置に置く。
   
   <entry>
     <title type="html"><![CDATA[PDIC中日辞書をEmacsで使う]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/15/cj2/"/>
-    <updated>2013-03-15T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/15/cj2</id>
-    <content type="html"><![CDATA[<p>
-Emacs <i>Lookup</i> で、<a href="http://www.karak.jp/">Karak氏</a> が作成した<a href="http://jp.soft73.com/pdic用中国語辞書-2-0/">中日辞書</a> を使う。
+    <link href="http://kawabata.github.com/blog/2013-03-15-cj2.html"/>
+    <updated>2013-03-15T00:30:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/cj2</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. PDIC形式辞書</a></li>
+<li><a href="#sec-2">2. BOCUデコーダ</a></li>
+<li><a href="#sec-3">3. ndpdicエージェント</a></li>
+</ul>
+</div>
+</div>
+<p>
+Emacs <i>Lookup</i> で、<a href="http://www.karak.jp/">Karak氏</a> が作成した<a href="http://jp.soft73.com/pdic用中国語辞書-2-0/">中日辞書</a> を使うことができる。
 </p>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">PDIC形式辞書</h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> PDIC形式辞書</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-<a href="http://homepage3.nifty.com/TaN/unicode/dic-spec.html">PDIC</a> は Unicode にフル対応した辞書フォーマットで、国内の多言語辞書によ
+<a href="http://homepage3.nifty.com/TaN/unicode/dic-spec.html">PDIC</a> は Unicode にフル対応した辞書フォーマットで、日本の多言語辞書によ
 く利用されている。特徴として、内部文字符号として BOCU (Binary
 Ordered Compression of Unicode) と呼ばれる圧縮形式を採用している。
 </p>
@@ -171,16 +497,17 @@ BOCUはハフマン符号ほど圧縮率は大きくはないが、圧縮後の�
 </div>
 </div>
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">BOCUデコーダ</h2>
+<h2 id="sec-2"><span class="section-number-2">2</span> BOCUデコーダ</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Lookup に付属している <code>bocu.el</code> は、BOCU符号をデコードする。 <code>bocu.el</code>
-は、レジスタベースのCCL言語で記述されていて、高速に動作する。
+は、レジスタベースのCCL言語で記述されていて、Emacs Lisp に比べておよそ
+５～１０倍程度高速に動作する。
 </p>
 </div>
 </div>
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">ndpdicエージェント</h2>
+<h2 id="sec-3"><span class="section-number-2">3</span> ndpdicエージェント</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 ndpdicエージェントは、 <code>bocu.el</code> を利用して、PDIC辞書の検索と表示を行う。
@@ -205,9 +532,10 @@ ndpdicエージェントは、PDIC辞書が入ったフォルダを指定する�
 <code>M-x lookup-restart</code> で中日辞書が現れるかを確認し、検索する。
 </p>
 
-<p>
-<i>image:/images/2013-03-15-cj2.png</i>
-</p>
+
+<div class="figure">
+<p><img src="2013-03-15-cj2.png"  alt="2013-03-15-cj2.png"/></p>
+</div>
 </div>
 </div>
 ]]></content>
@@ -215,16 +543,26 @@ ndpdicエージェントは、PDIC辞書が入ったフォルダを指定する�
   
   <entry>
     <title type="html"><![CDATA[Emacsの汎変数]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/14/general-variables/"/>
+    <link href="http://kawabata.github.com/blog/2013-03-14-general-variables.html"/>
     <updated>2013-03-14T00:30:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/14/general-variables</id>
-    <content type="html"><![CDATA[<p>
+    <id>http://kawabata.github.com/blog/general-variables</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. setf の例</a></li>
+<li><a href="#sec-2">2. setf に対応している関数</a></li>
+<li><a href="#sec-3">3. 汎変数の作り方</a></li>
+</ul>
+</div>
+</div>
+<p>
 Emacs 24.3 で導入された汎変数を使えば、ソースコードの可読性が高まる可能
 性がある。
 </p>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">setf の例</h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> setf の例</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 汎変数の代入マクロ setf を使えば、 car だけで setcar 相当が記述できる。
@@ -260,14 +598,14 @@ a
 </div>
 </div>
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">setf に対応している関数</h2>
+<h2 id="sec-2"><span class="section-number-2">2</span> setf に対応している関数</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 24.3 で、setf に対応している関数は以下の通り。setf を使えば右の関数は
-不要になる。覚える関数が減れば、プログラムの作成・保守も楽になる。
+不要になる。覚える関数が減れば、プログラム作成・保守も楽になる。
 </p>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" >
 
 
 <colgroup>
@@ -474,16 +812,10 @@ a
 </tbody>
 </table>
 
-
-<p>
-if や logand の setf は頓智レベルかもしれない。
-</p>
-
 <p>
 汎変数を使うと、構造の構築子とアクセス関数のペアだけで、構造に式を代入
-できる。たとえば hash の場合、これまでは コンストラクタの
-make-hash-table, gethash の他に puthash が必要だったが、setf を使えば
-puthash は不要になる。
+できる。たとえば hash の場合、これまではmake-hash-table, gethash の他に
+puthash が必要だったが、setf を使えばputhash は不要になる。
 </p>
 
 <pre class="example">
@@ -492,7 +824,7 @@ puthash は不要になる。
 </div>
 </div>
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">汎変数の作り方</h2>
+<h2 id="sec-3"><span class="section-number-2">3</span> 汎変数の作り方</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 gv.el の最後には、コメントアウトされている alist-get 関数の実装例があり、
@@ -621,8 +953,8 @@ Emacsの汎変数を記述する gv.el は、コンパイラやモナドに通�
 <h2 class="footnotes">Footnotes: </h2>
 <div id="text-footnotes">
 
-<sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p><code>declare</code> 経由で汎変数関数を設定する場合、 <code>do</code> 以外の引数の追
-  加は <code>gv&#x2013;defun-declaration</code> が自動的に行なってくれる。</p>
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p><code>declare</code> 経由で汎変数関数を設定する場合、 <code>do</code> 以外の引数の追
+  加は <code>gv&#x2013;defun-declaration</code> が自動的に行なってくれる。</p></div>
 
 
 </div>
@@ -631,11 +963,22 @@ Emacsの汎変数を記述する gv.el は、コンパイラやモナドに通�
   
   <entry>
     <title type="html"><![CDATA[Dired のソート順のカスタマイズ]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/13/dired-sort/"/>
+    <link href="http://kawabata.github.com/blog/2013-03-13-dired-sort.html"/>
     <updated>2013-03-13T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/13/dired-sort</id>
-    <content type="html"><![CDATA[<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">Dired におけるファイル名の順番</h2>
+    <id>http://kawabata.github.com/blog/dired-sort</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Dired におけるファイル名の順番</a></li>
+<li><a href="#sec-2">2. GNU ls のインストール</a></li>
+<li><a href="#sec-3">3. dired の sort命令の拡張</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Dired におけるファイル名の順番</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Emacs の ファイルブラウザ dired では、ファイルの並び順を &#8220;s&#8221; キーで切り
@@ -649,7 +992,7 @@ Emacs の ファイルブラウザ dired では、ファイルの並び順を &#
 </div>
 </div>
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">GNU ls のインストール</h2>
+<h2 id="sec-2"><span class="section-number-2">2</span> GNU ls のインストール</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Mac に標準で付属する &#8220;ls&#8221; 命令は、ファイルを種類順で並び替えることがで
@@ -675,7 +1018,7 @@ Mac に標準で付属する &#8220;ls&#8221; 命令は、ファイルを種類�
 </div>
 </div>
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">dired の sort命令の拡張</h2>
+<h2 id="sec-3"><span class="section-number-2">3</span> dired の sort命令の拡張</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 以下に、 <code>dired-toggle-sort</code> を拡張した、 <code>dired-rotate-sort</code> を示す。
@@ -710,10 +1053,21 @@ Mac に標準で付属する &#8220;ls&#8221; 命令は、ファイルを種類�
   
   <entry>
     <title type="html"><![CDATA[Emacs 24.3 雑感]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/12/emacs23/"/>
+    <link href="http://kawabata.github.com/blog/2013-03-12-emacs23.html"/>
     <updated>2013-03-12T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/12/emacs23</id>
-    <content type="html"><![CDATA[<p>
+    <id>http://kawabata.github.com/blog/emacs23</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. cl-lib</a></li>
+<li><a href="#sec-2">2. pcase.el</a></li>
+<li><a href="#sec-3">3. 汎変数</a></li>
+<li><a href="#sec-4">4. 全体としてみると</a></li>
+</ul>
+</div>
+</div>
+<p>
 Emacs 24.3 リリース直後に山本光晴さんがMac用のパッチを公開してくださり、
 それをEmacsのソースコードにあてたgitレポジトリを<a href="https://github.com/railwaycat/emacs-mac-port">公開</a> してくれている方
 もいる。
@@ -731,7 +1085,7 @@ Emacs 24.3 リリース直後に山本光晴さんがMac用のパッチを公開
 </p>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">cl-lib</h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> cl-lib</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 cl.el は従来、Emacsの内部関数と衝突するため、標準配布パッケージではマ
@@ -763,7 +1117,7 @@ clのマクロは相変わらず、 <code>(eval-when-compile (require 'cl))</cod
 </div>
 </div>
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">pcase.el</h2>
+<h2 id="sec-2"><span class="section-number-2">2</span> pcase.el</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Emacs 24.2 から導入された pcase が最近、どんどん使われている。やはり
@@ -802,7 +1156,7 @@ Emacs 24.2 から導入された pcase が最近、どんどん使われてい�
 </div>
 </div>
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">汎変数</h2>
+<h2 id="sec-3"><span class="section-number-2">3</span> 汎変数</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Emacs 本体に、汎変数が導入され、 <code>setf</code> もEmacs本体に組み込まれた。
@@ -816,7 +1170,7 @@ Emacs 本体に、汎変数が導入され、 <code>setf</code> もEmacs本体�
 </div>
 </div>
 <div id="outline-container-4" class="outline-2">
-<h2 id="sec-4">全体としてみると</h2>
+<h2 id="sec-4"><span class="section-number-2">4</span> 全体としてみると</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 今回のリリースはバグ修正（特にメモリ関係）が多く、目立つ機能はあまり入っ
@@ -834,10 +1188,18 @@ Emacs 本体に、汎変数が導入され、 <code>setf</code> もEmacs本体�
   
   <entry>
     <title type="html"><![CDATA[Emacsで字通を読む]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/11/jitsuu/"/>
+    <link href="http://kawabata.github.com/blog/2013-03-11-jitsuu.html"/>
     <updated>2013-03-11T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/11/jitsuu</id>
-    <content type="html"><![CDATA[<p>
+    <id>http://kawabata.github.com/blog/jitsuu</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. インデックスファイルの作成</a></li>
+</ul>
+</div>
+</div>
+<p>
 <a href="http://www.tranradar.net/cd-jitsuu.html">字通 </a>は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
 CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。
 </p>
@@ -847,7 +1209,7 @@ Emacsの<a href="http://lookup2.github.com">Lookup</a> には字通CD-ROMを読�
 </p>
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">インデックスファイルの作成</h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> インデックスファイルの作成</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 「字通」を検索するためには、インデックスファイルを事前に作成する必要が
@@ -896,7 +1258,7 @@ M-x save-buffer
 
 
 <div class="figure">
-<p><img src="http://kawabata.github.com/images/2013-03-11-jitsuu.png"  alt="2013-03-11-jitsuu.png"/></p>nil
+<p><img src="2013-03-11-jitsuu.png"  alt="2013-03-11-jitsuu.png"/></p>
 </div>
 </div>
 </div>
@@ -905,11 +1267,23 @@ M-x save-buffer
   
   <entry>
     <title type="html"><![CDATA[EmacsでオフラインWikipediaを検索する]]></title>
-    <link href="http://kawabata.github.com/blog/2013/03/10/ndzim/"/>
+    <link href="http://kawabata.github.com/blog/2013-03-10-ndzim.html"/>
     <updated>2013-03-10T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/2013/03/10/ndzim</id>
-    <content type="html"><![CDATA[<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">Lookup の ndzim エージェント</h2>
+    <id>http://kawabata.github.com/blog/ndzim</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Lookup の ndzim エージェント</a></li>
+<li><a href="#sec-2">2. OpenZIM について</a></li>
+<li><a href="#sec-3">3. ZimLibのインストール</a></li>
+<li><a href="#sec-4">4. Lookup の設定</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Lookup の ndzim エージェント</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="http://lookup2.github.com/">Lookup</a> で <a href="http://openzim.org">OpenZIM</a> 形式のファイルを検索するための <code>ndzim</code> エージェン
@@ -918,7 +1292,7 @@ M-x save-buffer
 </div>
 </div>
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2">OpenZIM について</h2>
+<h2 id="sec-2"><span class="section-number-2">2</span> OpenZIM について</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 <a href="http://openzim.org">OpenZIM</a> ファイル形式は、複数のWebページや付随する画像データを、整理・圧
@@ -935,7 +1309,7 @@ Wikipediaを画像なしで 12GByte 程度に圧縮できる。様々な言語�
 </div>
 </div>
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3">ZimLibのインストール</h2>
+<h2 id="sec-3"><span class="section-number-2">3</span> ZimLibのインストール</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Lookup の ndzim エージェントは、<a href="https://gerrit.wikimedia.org/r/p/openzim.git">zimlib</a> に付属するzimdump/zimsearch ツー
@@ -959,7 +1333,7 @@ zimlib のコンパイルには lzma ライブラリが別途必要。MacPorts�
 </div>
 </div>
 <div id="outline-container-4" class="outline-2">
-<h2 id="sec-4">Lookup の設定</h2>
+<h2 id="sec-4"><span class="section-number-2">4</span> Lookup の設定</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 Lookup で OpenZIMを使うためには、 <code>$HOME/.emacs.d/lookup/init.el</code> に、
@@ -987,7 +1361,7 @@ ZIMファイルを入れたディレクトリを検索エージェントとし�
 
 
 <div class="figure">
-<p><img src="http://kawabata.github.com/images/2013-03-10-ndzim.png"  alt="2013-03-10-ndzim.png"/></p>
+<p><img src="2013-03-10-ndzim.png"  alt="2013-03-10-ndzim.png"/></p>
 <p>検索サンプル</p>
 </div>
 </div>
@@ -996,7 +1370,7 @@ ZIMファイルを入れたディレクトリを検索エージェントとし�
 <h2 class="footnotes">Footnotes: </h2>
 <div id="text-footnotes">
 
-<sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p>Wikipedia 財団が公認している。</p>
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p>Wikipedia 財団が公認している。</p></div>
 
 
 </div>

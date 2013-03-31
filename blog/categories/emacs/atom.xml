@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: emacs | A Riddle Wrapped in a Mystery]]></title>
+  <link href="http://kawabata.github.com/blog/categories/emacs/atom.xml" rel="self"/>
+  <link href="http://kawabata.github.com/"/>
+  <updated>2013-03-30T13:30:43+09:00</updated>
+  <id>http://kawabata.github.com/</id>
+  <author>
+    <name><![CDATA[dotabata]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs で Goo のWeb辞書を利用する。]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-21-goo.html"/>
+    <updated>2013-03-21T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/goo</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. ndwebのオプション</a></li>
+<li><a href="#sec-2">2. ndweb-options</a></li>
+<li><a href="#sec-3">3. 設定</a></li>
+</ul>
+</div>
+</div>
+
+
+<p>
+<i>Lookup</i> の ndweb エージェントクラスは、世界中にあるWeb上の辞書を利用できる。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> ndwebのオプション</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Lookup でWeb辞書を使用する場合は、以下のオプションを指定する。
+</p>
+
+<dl class="org-dl">
+<dt> :self </dt><dd>OpenSearch Description URL
+</dd>
+<dt> :title </dt><dd>辞書のタイトル
+</dd>
+<dt> :methods </dt><dd>辞書の検索メソッド（前方一致など）
+</dd>
+<dt> :suggestions </dt><dd>候補の選択方法 （関数ならば HTMLファイルから候補を生成、URLならば OpenSearch JSON を指定する）
+</dd>
+<dt> :results </dt><dd>選択した候補の内容を表示する URL。
+</dd>
+<dt> :method </dt><dd>HTTP Post または Get のどちらを利用するか。
+</dd>
+</dl>
+
+<p>
+なお、:self が指定されているのならば、:title, :suggestions :results :methods 等のオプションの指定は必要ない。
+これらは :self で指定された OpenSearch XML から自動的に取得される。逆に、:self がない場合は最低限、:title, 
+と :results が必須になる。
+</p>
+
+<p>
+<a href="http://mycroftproject.com/">Mycroft Project</a> では、全世界 2万以上の辞書の検索エンジンの OpenSearch
+XML が蓄積されている。ndweb エージェントの位置に、"mycroft:XXX" を指定
+すると、自動的に Mycroft のサイトからXXX の OpenSearch XML を取得して、
+辞書を設定する。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> ndweb-options</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+ndweb-options には、goo等のようないくつかのnewebエージェント用の独自オ
+プションがプリセットされている。ndweb-options にあるWebサイトを使えば、
+自分でオプションを設定する必要なく、すぐにそのWeb辞書を利用できる。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 設定</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+ndweb-options.el を参考に、使用したいWeb辞書のURLの "<a href="http://">http://</a>" を除いた部分を指定する。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq lookup-search-agents 
+      '(...
+        (ndweb <span style="color: #ffa07a;">"dictionary.goo.ne.jp/jc"</span>)
+        ...))
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="2013-03-21-goo.png"  alt="2013-03-21-goo.png"/></p>
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs で Sony DD-CH10 の日中辞書を利用する。]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-19-ddch10.html"/>
+    <updated>2013-03-19T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/ddch10</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. EBXA-C</a></li>
+<li><a href="#sec-2">2. 漢字インデクサ</a></li>
+<li><a href="#sec-3">3. ピン音フィルタ</a></li>
+<li><a href="#sec-4">4. 設定</a></li>
+</ul>
+</div>
+</div>
+
+
+<p>
+<i>Lookup</i> は、かつて Sony が発売していた電子辞書 <a href="http://www.sony.co.jp/SonyInfo/News/Press_Archive/199703/97CI-022/">DD-CH10</a> CD-ROMに入っていた小学館の日中・中日辞書が利用できる。
+この辞書は語彙・例文が充実していて、発売後１５年が経過した今でも人気が高い。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> EBXA-C</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+DD-CH10 は、電子辞書規格 EBXA を中国語向けに拡張した、これ一台限りの特別規格 EBXA-C を採用している。
+この辞書の閲覧には、EBXA-C 対応のパッチを当てた <a href="http://ikazuhiro.s206.xrea.com/staticpages/index.php/eblook">eblook</a> を利用する。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 漢字インデクサ</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+DD-CH10 の日中辞書は平仮名とピン音でしか検索できないが、<a href="http://www31.ocn.ne.jp/~h_ishida/EBKIdx.html">EB漢字インデクサ</a> 
+を使用することで、漢字でも検索できるようになる。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> ピン音フィルタ</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Lookup の support-zhongri ファイルは、中国語の文字をピン音に直すクエリフィルタが組み込まれている。
+このクエリフィルタが使用する関数 lookup-text-hanzi-to-pinyin は、漢字をピン音に変換する。
+漢字は台湾漢字・中国漢字の両方を使用できる。複数の発音がある漢字は全ての組み合わせを返す。
+</p>
+
+<pre class="example">
+(lookup-text-hanzi-to-pinyin "重慶") ⏎
+("zhong4qing4" "chong2qing4")
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 設定</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+DD-CH10 のCD-ROMをコピーして、ndeb エージェントとしてディレクトリを指定する。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq lookup-search-agents 
+      '(...
+        (ndeb <span style="color: #ffa07a;">"~/edicts/ZHONG_RI"</span>)
+        ...))
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="2013-03-19-ddch10.png"  alt="2013-03-19-ddch10.png"/></p>
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[zsh の ヒストリファイルを閲覧・編集する]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-17-zsh-history.html"/>
+    <updated>2013-03-17T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/zsh-history</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. zsh ヒストリファイルの構造</a></li>
+<li><a href="#sec-2">2. zsh ヒストリファイルのデコーダ</a></li>
+<li><a href="#sec-3">3. zsh ヒストリファイルのエンコーダ</a></li>
+<li><a href="#sec-4">4. zsh ヒストリファイルの符号体系</a></li>
+</ul>
+</div>
+</div>
+
+
+<p>
+zsh のヒストリファイル <code>/.zsh_history</code> は、ASCII以外の文字に対してエス
+ケープをしているため、通常はエディタで閲覧したり編集できない。
+</p>
+
+
+
+
+<p>
+Emacsで、 <code>zsh_history</code> 独自のデコーダ・エンコーダを実装することで、
+zshヒストリファイルの閲覧・編集できるようにする。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> zsh ヒストリファイルの構造</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+zshのヒストリファイルは、保存するデータの各バイトにおいて、それが
+0x80-0x9d または 0xa0 のとき、その前に 0x83 を入れて、続くバイトの
+6bit 目を反転させるようになっている。詳細は zsh のソースコードの
+meta.c を参照。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> zsh ヒストリファイルのデコーダ</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+以下に zshのヒストリファイルのデコーダをCCLで示す。ただし、本来はCCLは
+UCS符号を出力することになっているが、このCCLデコーダはUTF-8のバイトシー
+ケンスを出力する。（UTF-8のデコーダを別途接続する必要がある。）
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-ccl-program zsh-history-decoder
+  '(1 ((<span style="color: #00ffff;">loop</span>
+        (read-if (r0 == #x83)
+                 ((read r0) (r0 ^= #x20)))
+        (write r0)
+        (repeat))))
+  <span style="color: #ffa07a;">"decode .zsh_history file."</span>)
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> zsh ヒストリファイルのエンコーダ</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-ccl-program zsh-history-encoder
+  '(2 ((<span style="color: #00ffff;">loop</span>
+        (read r0)
+        (r1 = (r0 &lt; #x9e))
+        (r2 = (r0 == #xa0))
+        (<span style="color: #00ffff;">if</span> (((r0 &gt; #x82) &amp; r1) | r2)
+            ((write #x83) (write (r0 ^ #x20)))
+          (write r0))
+        (repeat))))
+  <span style="color: #ffa07a;">"encode .zsh_history file."</span>)
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> zsh ヒストリファイルの符号体系</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+上記のデコーダ・エンコーダは、UTF-8 バイト列を対象としているが、これら
+はEmacsではLatin-1に解釈されてしまう。そのため、一旦Latin-1と解釈された
+符号をUCS符号に直さなければならない。そのために、post-read-converter と、
+pre-write-converter を用意する。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(<span style="color: #00ffff;">defun</span> <span style="color: #87cefa;">post-read-decode-utf8</span> (len)
+  (<span style="color: #00ffff;">save-excursion</span>
+    (<span style="color: #00ffff;">save-restriction</span>
+      (narrow-to-region (point) (+ (point) len))
+      (encode-coding-region (point-min) (point-max) 'latin-1)
+      (decode-coding-region (point-min) (point-max) 'utf-8)
+      (- (point-max) (point-min)))))
+
+(<span style="color: #00ffff;">defun</span> <span style="color: #87cefa;">pre-write-encode-utf8</span> (_ignored _ignored2)
+  (encode-coding-region (point-min) (point-max) 'utf-8)
+  (decode-coding-region (point-min) (point-max) 'latin-1))
+</pre>
+</div>
+
+<p>
+上記をまとめて、zsh-history という符号化体系を作成し、これを
+<code>zsh_history</code> という文字列を含むファイルに結び付ける。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(define-coding-system 'zsh-history <span style="color: #ffa07a;">"ZSH history"</span>
+  <span style="color: #b0c4de;">:coding-type</span> 'ccl
+  <span style="color: #b0c4de;">:charset-list</span> '(unicode)
+  <span style="color: #b0c4de;">:mnemonic</span> ?Z <span style="color: #b0c4de;">:ascii-compatible-p</span> t
+  <span style="color: #b0c4de;">:eol-type</span> 'unix
+  <span style="color: #b0c4de;">:ccl-decoder</span> 'zsh-history-decoder
+  <span style="color: #b0c4de;">:post-read-conversion</span> 'post-read-decode-utf8
+  <span style="color: #b0c4de;">:ccl-encoder</span> 'zsh-history-encoder
+  <span style="color: #b0c4de;">:pre-write-conversion</span> 'pre-write-encode-utf8)
+
+(modify-coding-system-alist 'file <span style="color: #ffa07a;">"zsh_history"</span> 'zsh-history)
+</pre>
+</div>
+
+<p>
+なお、Emacsは保存する際に最適な符号化を方法を見つけて再割当てを行うため、
+一旦、この符号化方式でファイルを保存した後は再度、ファイルを読みなおす
+必要がある。
+</p>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[PDICタイ語辞書をEmacsで使う]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-16-thai.html"/>
+    <updated>2013-03-16T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/thai</id>
+    <content type="html"><![CDATA[<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. PDIC タイ語辞書</a></li>
+<li><a href="#sec-2">2. 漢字・ひらがなフィルタ</a></li>
+<li><a href="#sec-3">3. 設定</a></li>
+</ul>
+</div>
+</div>
+
+
+<p>
+<i>Lookup</i> は、PDICの <a href="http://www.pdicthai.com/~pdicthai/">タイ語辞書</a> を扱うことができる。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> PDIC タイ語辞書</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+日・タイ辞書、タイ・日辞書（かな）、タイ日辞書（ローマ字）の３種類がある。
+漢字からは検索できないので、漢字語を検索したい場合はフィルタを設定する必要がある。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 漢字・ひらがなフィルタ</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Lookup の lookup-query-filter-kanji-to-kana は、クエリの文字を漢字から
+平仮名に変換する。この関数は内部で mecab を使う
+lookup-text-get-kana-readings を呼び出している。
+</p>
+
+<pre class="example">
+(lookup-text-get-kana-readings "山本山") ⏎
+("やまもとやま" "やまもとさん")
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 設定</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+エージェントにオプションとして <code>:query-filter
+lookup-query-filter-kanji-to-kana</code> を設定する。ただし、サポートファイル
+support-pdic-thai.el がすでにこの設定をしているため、辞書IDに
+"Uni-PdicThai-JP-IPA" という文字列が含まれているならば、ユーザが何か設
+定する必要はない。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq lookup-search-agents 
+      '(...
+        (ndpdic <span style="color: #ffa07a;">"~/edicts/PdicThai"</span>)
+        ...))
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="2013-03-16-thai.png"  alt="2013-03-16-thai.png"/></p>
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Emacsで字通を読む]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-15-jitsuu.html"/>
+    <updated>2013-03-15T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/jitsuu</id>
+    <content type="html"><![CDATA[<p>
+<a href="http://www.tranradar.net/cd-jitsuu.html">字通 </a>は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
+CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。
+</p>
+
+
+
+
+<p>
+Emacsの<a href="http://lookup2.github.com">Lookup</a> で字通CD-ROMを読むための検索エージェント <code>ndjitsuu</code> を開発した。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">インデックスファイルの作成</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+「字通」を検索するためには、インデックスファイルを事前に作成する必要が
+ある。lookup のmisc フォルダに入っている <code>jitsuu_mk_jukugo_list.rb</code>
+と~jitsuu<sub>mk</sub><sub>oyaji</sub><sub>list</sub>.rb~ を使って、インデックスファイルを作成する。
+</p>
+
+<pre class="example">
+<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>% cd ~/edicts/Jitsuu/DATA/
+</span><span class='line'>% ruby jitsuu_mk_oyaji_list.rb &gt; oyaji.txt
+</span><span class='line'>% ruby jitsuu_mk_jukugo_list.rb &gt; jukugo.txt</span></code></pre></td></tr></table></div></figure></notextile></div>
+</pre>
+
+<p>
+次に、生成された oyaji.txt と jukugo.txt の外字をUCS漢字コードに置換す
+る。
+</p>
+
+<pre class="example">
+M-x find-file oyaji.txt
+M-x ndjitsuu-convert-gaiji-to-ucs
+M-x save-buffer
+
+M-x find-file jukugo.txt
+M-x ndjitsuu-convert-gaiji-to-ucs
+M-x save-buffer
+</pre>
+
+<p>
+oyaji.txt と jukugo.txt は DATAフォルダと同じ位置に置く。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq lookup-search-agents
+      `(...
+        (ndjitsuu <span style="color: #ffa07a;">"~/edicts/Jitsuu"</span>)
+        ...))
+</pre>
+</div>
+
+<p>
+<code>lookup-search-agents</code> 変数に <code>ndjitsuu</code> を加えて、 <code>M-x restart</code> すれ
+ば字通をEmacsで読めるようになる。
+</p>
+
+<p>
+<i>image:/images/2013-03-15-jitsuu.png</i>
+</p>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+</feed>

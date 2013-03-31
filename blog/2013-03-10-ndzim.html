@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>EmacsでオフラインWikipediaを検索する - A Riddle Wrapped in a Mystery</title>
+  <meta name="author" content="dotabata">
+
+  
+  <meta name="description" content="Table of Contents 1. Lookup の ndzim エージェント
+2. OpenZIM について
+3. ZimLibのインストール
+4. Lookup の設定 1 Lookup の ndzim エージェント Lookup で OpenZIM 形式のファイルを検索するための &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://kawabata.github.com/blog/2013-03-10-ndzim.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="A Riddle Wrapped in a Mystery" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">A Riddle Wrapped in a Mystery</a></h1>
+  
+    <h2>中身はエニグマ・Emacs</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:kawabata.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">EmacsでオフラインWikipediaを検索する</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-10T23:00:00+09:00" pubdate data-updated="true">Mar 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Lookup の ndzim エージェント</a></li>
+<li><a href="#sec-2">2. OpenZIM について</a></li>
+<li><a href="#sec-3">3. ZimLibのインストール</a></li>
+<li><a href="#sec-4">4. Lookup の設定</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Lookup の ndzim エージェント</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<a href="http://lookup2.github.com/">Lookup</a> で <a href="http://openzim.org">OpenZIM</a> 形式のファイルを検索するための <code>ndzim</code> エージェン
+トを試作した。
+</p>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> OpenZIM について</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<a href="http://openzim.org">OpenZIM</a> ファイル形式は、複数のWebページや付随する画像データを、整理・圧
+縮して１ファイルにまとめる。主に Wikipedia 等の MediaWiki の記事をアー
+カイブするために開発されている。<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</p>
+
+<p>
+OpenZIM の<a href="http://www.openzim.org/wiki/ZIM_file_format">内部構造</a> は、LZMA2で圧縮された多数のデータの集合体である。日
+本語版Wikipediaの全記事（2011年現在）を画像込みで 7GByte、英語版
+Wikipediaを画像なしで 12GByte 程度に圧縮できる。様々な言語のWikipeida 全
+記事をアーカイブした OpenZIMファイルがKiwixサイトにて<a href="http://www.kiwix.org/wiki/Wikipedia_in_all_languages">配布</a>されている。
+</p>
+</div>
+</div>
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> ZimLibのインストール</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Lookup の ndzim エージェントは、<a href="https://gerrit.wikimedia.org/r/p/openzim.git">zimlib</a> に付属するzimdump/zimsearch ツー
+ルでOpenZIMファイルの検索とデータのダンプを行い、w3mで整形する。
+</p>
+
+<p>
+zimlib のコンパイルには lzma ライブラリが別途必要。MacPorts等でlzmaラ
+イブラリをインストールする場合は、CPPFLAGSやLDFLAGS環境変数を適切に設
+定する。 
+</p>
+
+<pre class="example">
+% git clone https://gerrit.wikimedia.org/r/p/openzim.git
+% cd cd openzim/zimlib
+% ./autogen.sh
+% ./configure
+% make
+% sudo make install
+</pre>
+</div>
+</div>
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Lookup の設定</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Lookup で OpenZIMを使うためには、 <code>$HOME/.emacs.d/lookup/init.el</code> に、
+ZIMファイルを入れたディレクトリを検索エージェントとして設定する。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(setq lookup-search-agents
+      '(...
+        (ndzim <span style="color: #ffa07a;">"/path/to/dir"</span>)
+       ))
+</pre>
+</div>
+
+<p>
+上記のように設定すると、検索エージェントは <code>/path/to/dir</code> ディレクトリ
+内にある、拡張子が <code>.zim</code> のファイルを見つける。
+</p>
+
+<p>
+あとは他のエージェントと同様、 <code>M-x lookup-restart</code> にて、無事に辞書選
+択バッファに辞書が表示されたら、単語で検索して動作を確認。
+</p>
+
+
+<div class="figure">
+<p><img src="2013-03-10-ndzim.png"  alt="2013-03-10-ndzim.png"/></p>
+<p>検索サンプル</p>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p>Wikipedia 財団が公認している。</p></div>
+
+
+</div>
+</div></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">dotabata</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-10T23:00:00+09:00" pubdate data-updated="true">Mar 10<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/emacs/'>emacs</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://kawabata.github.com/blog/2013-03-10-ndzim.html" data-via="" data-counturl="http://kawabata.github.com/blog/2013-03-10-ndzim.html" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-03-11-jitsuu.html" title="Next Post: Emacsで字通を読む">Emacsで字通を読む &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013-03-21-goo.html">Emacs で Goo のWeb辞書を利用する。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-03-19-ddch10.html">Emacs で Sony DD-CH10 の日中辞書を利用する。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-03-17-zsh-history.html">zsh の ヒストリファイルを閲覧・編集する</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-03-16-thai.html">PDICタイ語辞書をEmacsで使う</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-03-15-jitsuu.html">Emacsで字通を読む</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - dotabata -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
