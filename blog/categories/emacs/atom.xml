@@ -4,7 +4,7 @@
   <title><![CDATA[Category: emacs | A Riddle Wrapped in a Mystery]]></title>
   <link href="http://kawabata.github.com/blog/categories/emacs/atom.xml" rel="self"/>
   <link href="http://kawabata.github.com/"/>
-  <updated>2013-03-30T13:30:43+09:00</updated>
+  <updated>2013-04-01T13:18:16+09:00</updated>
   <id>http://kawabata.github.com/</id>
   <author>
     <name><![CDATA[dotabata]]></name>
@@ -14,31 +14,255 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Emacs で Goo のWeb辞書を利用する。]]></title>
-    <link href="http://kawabata.github.com/blog/2013-03-21-goo.html"/>
-    <updated>2013-03-21T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/goo</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. ndwebのオプション</a></li>
-<li><a href="#sec-2">2. ndweb-options</a></li>
-<li><a href="#sec-3">3. 設定</a></li>
-</ul>
-</div>
-</div>
-
-
-<p>
-<i>Lookup</i> の ndweb エージェントクラスは、世界中にあるWeb上の辞書を利用できる。
+    <title type="html"><![CDATA[数学用アルファベットをEmacsで入力する。]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-23-math-symbols.html"/>
+    <updated>2013-03-23T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/math-symbols</id>
+    <content type="html"><![CDATA[<p>
+Emacs Lisp の <a href="http://github.com/kawabata/math-symbols">math-symbols.el</a> は、通常の文字をイタリック文字やフラク
+トゥール文字へ変換できる。
 </p>
 
 
 
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> ndwebのオプション</h2>
+<h2 id="sec-1">Unicode の数学文字</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+通常、イタリックや太字は文字符号ではなくフォントで区別するが、数式で使
+う文字のイタリックや太字は意味的に異なるため、別の文字符号でこれらを扱う。
+</p>
+
+<p>
+Unicode で符号化されているスタイルは以下のとおりである。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" >
+
+
+<colgroup>
+<col class="left"/>
+
+<col class="left"/>
+
+<col class="left"/>
+
+<col class="left"/>
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">styles / scripts</th>
+<th scope="col" class="left">alphabets</th>
+<th scope="col" class="left">greeks*</th>
+<th scope="col" class="left">numerals</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">bold</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">(bold) italic</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">(bold) fraktur</td>
+<td class="left">yes</td>
+<td class="left">no</td>
+<td class="left">no</td>
+</tr>
+
+<tr>
+<td class="left">(bold) script</td>
+<td class="left">yes</td>
+<td class="left">no</td>
+<td class="left">no</td>
+</tr>
+
+<tr>
+<td class="left">double-struck</td>
+<td class="left">yes</td>
+<td class="left">partial</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">monospace</td>
+<td class="left">yes</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">sans-serif (italic)</td>
+<td class="left">yes</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">sans-serif bold (italic)</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">subscript</td>
+<td class="left">partial</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">superscript</td>
+<td class="left">partial</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+上の表において、アルファベットとは、大文字・小文字それぞれ２６文字ずつ
+である。また、ギリシャ文字は全て数学用ギリシャ文字記号とナブラ（ϵ, ϑ,
+ϰ, ϕ, ϱ, ϖ, ∇）を含む。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Unicode の符号とフォント</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Unicode では、数学用文字の符号は　U+1D400 からの SMP面で符号化されてい
+る。ただし、一部の早期にBMPで符号化されていた文字 (ℜなど) は別である。
+</p>
+
+<p>
+数学記号フォントは <a href="http://en.wikipedia.org/wiki/STIX_Fonts_project">STIX Font Project</a> が開発したフォントが主要なOSにはす
+でにインストール済である。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">init.el の設定</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+単に <code>(require 'math-sybols)</code> でインストールされる。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">文字のスタイル化</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+アルファベット等の文字をスタイル化したい場合は、領域を選択して、 <code>M-x
+math-symbols-XXXX-region</code> を実行する。たとえば abcde を 太字イタリック
+にしたい場合は、 <code>M-x math-symbols-bold-italic-region</code> とすれば良い。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" >
+
+
+<colgroup>
+<col class="left"/>
+
+<col class="left"/>
+
+<col class="left"/>
+</colgroup>
+<tbody>
+<tr>
+<td class="left">math-symbols-fraktur-region</td>
+<td class="left">abcde</td>
+<td class="left">𝔞𝔟𝔠𝔡𝔢</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-bold-region</td>
+<td class="left">abcde</td>
+<td class="left">𝐚𝐛𝐜𝐝𝐞</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-italic-region</td>
+<td class="left">abcde</td>
+<td class="left">𝑎𝑏𝑐𝑑𝑒</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-script-region</td>
+<td class="left">abcde</td>
+<td class="left">𝒶𝒷𝒸𝒹ℯ</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-double-struck-region</td>
+<td class="left">abcde</td>
+<td class="left">𝕒𝕓𝕔𝕕𝕖</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-sans-serif-region</td>
+<td class="left">abcde</td>
+<td class="left">𝖺𝖻𝖼𝖽𝖾</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-superscript-region</td>
+<td class="left">12345</td>
+<td class="left">¹²³⁴⁵</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+スタイル化した文字をもとに戻すには M-x ucs-normalize-NFKC-region を実行
+する。文字列を変換するには、 <code>(math-symbols-italic-region "hogehoge")</code>
+と実行する。文字列中に変換できない文字がある場合（空白含む）はエラーに
+なるが、 <code>C-u</code> プレフィックスで抑制できる。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(math-symbols-fraktur-string <span style="color: #ffa07a;">"fghijk"</span>) &#9166;
+<span style="color: #ffa07a;">"&#120099;&#120100;&#120101;&#120102;&#120103;&#120104;"</span>
+</pre>
+</div>
+</div>
+</div>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Emacs Lookup で Goo のWeb辞書を利用する。]]></title>
+    <link href="http://kawabata.github.com/blog/2013-03-21-goo.html"/>
+    <updated>2013-03-21T23:00:00+09:00</updated>
+    <id>http://kawabata.github.com/blog/goo</id>
+    <content type="html"><![CDATA[<p>
+<a href="http://lookup2.github.com">Lookup</a> の ndweb エージェントクラスは、世界中にあるWeb上の辞書を利用できる。
+</p>
+
+
+
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">ndwebのオプション</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Lookup でWeb辞書を使用する場合は、以下のオプションを指定する。
@@ -76,7 +300,7 @@ XML が蓄積されている。ndweb エージェントの位置に、"mycroft:X
 
 
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> ndweb-options</h2>
+<h2 id="sec-2">ndweb-options</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 ndweb-options には、goo等のようないくつかのnewebエージェント用の独自オ
@@ -88,7 +312,7 @@ ndweb-options には、goo等のようないくつかのnewebエージェント�
 
 
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> 設定</h2>
+<h2 id="sec-3">設定</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 ndweb-options.el を参考に、使用したいWeb辞書のURLの "<a href="http://">http://</a>" を除いた部分を指定する。
@@ -114,24 +338,11 @@ ndweb-options.el を参考に、使用したいWeb辞書のURLの "<a href="http
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Emacs で Sony DD-CH10 の日中辞書を利用する。]]></title>
+    <title type="html"><![CDATA[Emacs Lookup で Sony DD-CH10 の日中辞書を利用する。]]></title>
     <link href="http://kawabata.github.com/blog/2013-03-19-ddch10.html"/>
     <updated>2013-03-19T23:00:00+09:00</updated>
     <id>http://kawabata.github.com/blog/ddch10</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. EBXA-C</a></li>
-<li><a href="#sec-2">2. 漢字インデクサ</a></li>
-<li><a href="#sec-3">3. ピン音フィルタ</a></li>
-<li><a href="#sec-4">4. 設定</a></li>
-</ul>
-</div>
-</div>
-
-
-<p>
+    <content type="html"><![CDATA[<p>
 <i>Lookup</i> は、かつて Sony が発売していた電子辞書 <a href="http://www.sony.co.jp/SonyInfo/News/Press_Archive/199703/97CI-022/">DD-CH10</a> CD-ROMに入っていた小学館の日中・中日辞書が利用できる。
 この辞書は語彙・例文が充実していて、発売後１５年が経過した今でも人気が高い。
 </p>
@@ -140,7 +351,7 @@ ndweb-options.el を参考に、使用したいWeb辞書のURLの "<a href="http
 
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> EBXA-C</h2>
+<h2 id="sec-1">EBXA-C</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 DD-CH10 は、電子辞書規格 EBXA を中国語向けに拡張した、これ一台限りの特別規格 EBXA-C を採用している。
@@ -151,7 +362,7 @@ DD-CH10 は、電子辞書規格 EBXA を中国語向けに拡張した、これ
 
 
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> 漢字インデクサ</h2>
+<h2 id="sec-2">漢字インデクサ</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 DD-CH10 の日中辞書は平仮名とピン音でしか検索できないが、<a href="http://www31.ocn.ne.jp/~h_ishida/EBKIdx.html">EB漢字インデクサ</a> 
@@ -162,7 +373,7 @@ DD-CH10 の日中辞書は平仮名とピン音でしか検索できないが、
 
 
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> ピン音フィルタ</h2>
+<h2 id="sec-3">ピン音フィルタ</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Lookup の support-zhongri ファイルは、中国語の文字をピン音に直すクエリフィルタが組み込まれている。
@@ -179,7 +390,7 @@ Lookup の support-zhongri ファイルは、中国語の文字をピン音に�
 
 
 <div id="outline-container-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> 設定</h2>
+<h2 id="sec-4">設定</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 DD-CH10 のCD-ROMをコピーして、ndeb エージェントとしてディレクトリを指定する。
@@ -205,24 +416,11 @@ DD-CH10 のCD-ROMをコピーして、ndeb エージェントとしてディレ�
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[zsh の ヒストリファイルを閲覧・編集する]]></title>
+    <title type="html"><![CDATA[Emacs で zsh の ヒストリファイルを閲覧・編集する]]></title>
     <link href="http://kawabata.github.com/blog/2013-03-17-zsh-history.html"/>
     <updated>2013-03-17T23:00:00+09:00</updated>
     <id>http://kawabata.github.com/blog/zsh-history</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. zsh ヒストリファイルの構造</a></li>
-<li><a href="#sec-2">2. zsh ヒストリファイルのデコーダ</a></li>
-<li><a href="#sec-3">3. zsh ヒストリファイルのエンコーダ</a></li>
-<li><a href="#sec-4">4. zsh ヒストリファイルの符号体系</a></li>
-</ul>
-</div>
-</div>
-
-
-<p>
+    <content type="html"><![CDATA[<p>
 zsh のヒストリファイル <code>/.zsh_history</code> は、ASCII以外の文字に対してエス
 ケープをしているため、通常はエディタで閲覧したり編集できない。
 </p>
@@ -239,7 +437,7 @@ zshヒストリファイルの閲覧・編集できるようにする。
 
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> zsh ヒストリファイルの構造</h2>
+<h2 id="sec-1">zsh ヒストリファイルの構造</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 zshのヒストリファイルは、保存するデータの各バイトにおいて、それが
@@ -252,7 +450,7 @@ meta.c を参照。
 
 
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> zsh ヒストリファイルのデコーダ</h2>
+<h2 id="sec-2">zsh ヒストリファイルのデコーダ</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 以下に zshのヒストリファイルのデコーダをCCLで示す。ただし、本来はCCLは
@@ -276,7 +474,7 @@ UCS符号を出力することになっているが、このCCLデコーダはUT
 
 
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> zsh ヒストリファイルのエンコーダ</h2>
+<h2 id="sec-3">zsh ヒストリファイルのエンコーダ</h2>
 <div class="outline-text-2" id="text-3">
 <div class="org-src-container">
 
@@ -297,7 +495,7 @@ UCS符号を出力することになっているが、このCCLデコーダはUT
 
 
 <div id="outline-container-4" class="outline-2">
-<h2 id="sec-4"><span class="section-number-2">4</span> zsh ヒストリファイルの符号体系</h2>
+<h2 id="sec-4">zsh ヒストリファイルの符号体系</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 上記のデコーダ・エンコーダは、UTF-8 バイト列を対象としているが、これら
@@ -355,23 +553,11 @@ pre-write-converter を用意する。
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[PDICタイ語辞書をEmacsで使う]]></title>
+    <title type="html"><![CDATA[Emacs Lookup で PDICタイ語辞書を使う]]></title>
     <link href="http://kawabata.github.com/blog/2013-03-16-thai.html"/>
     <updated>2013-03-16T23:00:00+09:00</updated>
     <id>http://kawabata.github.com/blog/thai</id>
-    <content type="html"><![CDATA[<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. PDIC タイ語辞書</a></li>
-<li><a href="#sec-2">2. 漢字・ひらがなフィルタ</a></li>
-<li><a href="#sec-3">3. 設定</a></li>
-</ul>
-</div>
-</div>
-
-
-<p>
+    <content type="html"><![CDATA[<p>
 <i>Lookup</i> は、PDICの <a href="http://www.pdicthai.com/~pdicthai/">タイ語辞書</a> を扱うことができる。
 </p>
 
@@ -379,7 +565,7 @@ pre-write-converter を用意する。
 
 
 <div id="outline-container-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> PDIC タイ語辞書</h2>
+<h2 id="sec-1">PDIC タイ語辞書</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 日・タイ辞書、タイ・日辞書（かな）、タイ日辞書（ローマ字）の３種類がある。
@@ -390,7 +576,7 @@ pre-write-converter を用意する。
 
 
 <div id="outline-container-2" class="outline-2">
-<h2 id="sec-2"><span class="section-number-2">2</span> 漢字・ひらがなフィルタ</h2>
+<h2 id="sec-2">漢字・ひらがなフィルタ</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Lookup の lookup-query-filter-kanji-to-kana は、クエリの文字を漢字から
@@ -407,7 +593,7 @@ lookup-text-get-kana-readings を呼び出している。
 
 
 <div id="outline-container-3" class="outline-2">
-<h2 id="sec-3"><span class="section-number-2">3</span> 設定</h2>
+<h2 id="sec-3">設定</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 エージェントにオプションとして <code>:query-filter
@@ -430,86 +616,6 @@ support-pdic-thai.el がすでにこの設定をしているため、辞書IDに
 <div class="figure">
 <p><img src="2013-03-16-thai.png"  alt="2013-03-16-thai.png"/></p>
 </div>
-</div>
-</div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Emacsで字通を読む]]></title>
-    <link href="http://kawabata.github.com/blog/2013-03-15-jitsuu.html"/>
-    <updated>2013-03-15T23:00:00+09:00</updated>
-    <id>http://kawabata.github.com/blog/jitsuu</id>
-    <content type="html"><![CDATA[<p>
-<a href="http://www.tranradar.net/cd-jitsuu.html">字通 </a>は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
-CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。
-</p>
-
-
-
-
-<p>
-Emacsの<a href="http://lookup2.github.com">Lookup</a> で字通CD-ROMを読むための検索エージェント <code>ndjitsuu</code> を開発した。
-</p>
-
-
-
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">インデックスファイルの作成</h2>
-<div class="outline-text-2" id="text-1">
-<p>
-「字通」を検索するためには、インデックスファイルを事前に作成する必要が
-ある。lookup のmisc フォルダに入っている <code>jitsuu_mk_jukugo_list.rb</code>
-と~jitsuu<sub>mk</sub><sub>oyaji</sub><sub>list</sub>.rb~ を使って、インデックスファイルを作成する。
-</p>
-
-<pre class="example">
-<div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>% cd ~/edicts/Jitsuu/DATA/
-</span><span class='line'>% ruby jitsuu_mk_oyaji_list.rb &gt; oyaji.txt
-</span><span class='line'>% ruby jitsuu_mk_jukugo_list.rb &gt; jukugo.txt</span></code></pre></td></tr></table></div></figure></notextile></div>
-</pre>
-
-<p>
-次に、生成された oyaji.txt と jukugo.txt の外字をUCS漢字コードに置換す
-る。
-</p>
-
-<pre class="example">
-M-x find-file oyaji.txt
-M-x ndjitsuu-convert-gaiji-to-ucs
-M-x save-buffer
-
-M-x find-file jukugo.txt
-M-x ndjitsuu-convert-gaiji-to-ucs
-M-x save-buffer
-</pre>
-
-<p>
-oyaji.txt と jukugo.txt は DATAフォルダと同じ位置に置く。
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq lookup-search-agents
-      `(...
-        (ndjitsuu <span style="color: #ffa07a;">"~/edicts/Jitsuu"</span>)
-        ...))
-</pre>
-</div>
-
-<p>
-<code>lookup-search-agents</code> 変数に <code>ndjitsuu</code> を加えて、 <code>M-x restart</code> すれ
-ば字通をEmacsで読めるようになる。
-</p>
-
-<p>
-<i>image:/images/2013-03-15-jitsuu.png</i>
-</p>
 </div>
 </div>
 

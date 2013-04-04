@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Emacsで字通を読む - A Riddle Wrapped in a Mystery</title>
+  <title>汎用電子とAdobe-Japan1のIVSを相互変換する。 - A Riddle Wrapped in a Mystery</title>
   <meta name="author" content="dotabata">
 
   
-  <meta name="description" content="字通 は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
-CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。 EmacsのLookup で字通CD-ROMを読むための検索エージェント ndjitsuu を開発した。 インデックスファイルの作成 「字通 &hellip;">
+  <meta name="description" content="
+IVS IVS (Ideographic Variation Sequence) は、異体字を細かく制御する技術である。 汎用電子とIVS 設定 http://github.com/cjkvi にある、 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@ CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち�
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://kawabata.github.com/blog/2013-03-15-jitsuu.html">
+  <link rel="canonical" href="http://kawabata.github.com/blog/2013-03-23-aj1-hd.html">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/data-table.css" rel="stylesheet" type="text/css" />
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
@@ -70,7 +70,7 @@ CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち�
   
   <header>
     
-      <h1 class="entry-title">Emacsで字通を読む</h1>
+      <h1 class="entry-title">汎用電子とAdobe-Japan1のIVSを相互変換する。</h1>
     
     
       <p class="meta">
@@ -86,75 +86,30 @@ CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち�
   
 
 
-<time datetime="2013-03-15T23:00:00+09:00" pubdate data-updated="true">Mar 15<span>th</span>, 2013</time>
+<time datetime="2013-03-23T00:00:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>
-<a href="http://www.tranradar.net/cd-jitsuu.html">字通 </a>は白川静の辞書３部作の最高峰。書籍版は重いし価格も23,000円と高いが、
-CD-ROM版なら安いしHDDにコピーできてノートパソコンで持ち歩ける。
-</p>
-
-<p>
-Emacsの<a href="http://lookup2.github.com">Lookup</a> で字通CD-ROMを読むための検索エージェント <code>ndjitsuu</code> を開発した。
-</p>
-
-<div id="outline-container-1" class="outline-2">
-<h2 id="sec-1">インデックスファイルの作成</h2>
+<div class="entry-content"><div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">IVS</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-「字通」を検索するためには、インデックスファイルを事前に作成する必要が
-ある。lookup のmisc フォルダに入っている <code>jitsuu_mk_jukugo_list.rb</code>
-と~jitsuu<sub>mk</sub><sub>oyaji</sub><sub>list</sub>.rb~ を使って、インデックスファイルを作成する。
+IVS (Ideographic Variation Sequence) は、異体字を細かく制御する技術である。
 </p>
-
-<pre class="example">
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>% cd ~/edicts/Jitsuu/DATA/
-</span><span class='line'>% ruby jitsuu_mk_oyaji_list.rb &gt; oyaji.txt
-</span><span class='line'>% ruby jitsuu_mk_jukugo_list.rb &gt; jukugo.txt</span></code></pre></td></tr></table></div></figure>
-</pre>
-
-<p>
-次に、生成された oyaji.txt と jukugo.txt の外字をUCS漢字コードに置換す
-る。
-</p>
-
-<pre class="example">
-M-x find-file oyaji.txt
-M-x ndjitsuu-convert-gaiji-to-ucs
-M-x save-buffer
-
-M-x find-file jukugo.txt
-M-x ndjitsuu-convert-gaiji-to-ucs
-M-x save-buffer
-</pre>
-
-<p>
-oyaji.txt と jukugo.txt は DATAフォルダと同じ位置に置く。
-</p>
-
-<div class="org-src-container">
-
-<pre class="src src-emacs-lisp">(setq lookup-search-agents
-      `(...
-        (ndjitsuu <span style="color: #ffa07a;">"~/edicts/Jitsuu"</span>)
-        ...))
-</pre>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">汎用電子とIVS</h2>
 </div>
 
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">設定</h2>
+<div class="outline-text-2" id="text-3">
 <p>
-<code>lookup-search-agents</code> 変数に <code>ndjitsuu</code> を加えて、 <code>M-x restart</code> すれ
-ば字通をEmacsで読めるようになる。
-</p>
-
-<p>
-<i>image:/images/2013-03-15-jitsuu.png</i>
+<a href="http://github.com/cjkvi">http://github.com/cjkvi</a> にある、
 </p>
 </div>
 </div>
@@ -180,21 +135,15 @@ oyaji.txt と jukugo.txt は DATAフォルダと同じ位置に置く。
   
 
 
-<time datetime="2013-03-15T23:00:00+09:00" pubdate data-updated="true">Mar 15<span>th</span>, 2013</time>
+<time datetime="2013-03-23T00:00:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
       
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/emacs/'>emacs</a>
-  
-</span>
 
 
     </p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://kawabata.github.com/blog/2013-03-15-jitsuu.html" data-via="" data-counturl="http://kawabata.github.com/blog/2013-03-15-jitsuu.html" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://kawabata.github.com/blog/2013-03-23-aj1-hd.html" data-via="" data-counturl="http://kawabata.github.com/blog/2013-03-23-aj1-hd.html" >Tweet</a>
   
   
   
@@ -203,10 +152,10 @@ oyaji.txt と jukugo.txt は DATAフォルダと同じ位置に置く。
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013-03-15-cj2.html" title="Previous Post: Emacs Lookup で Karak PDIC中日辞書を使う">&laquo; Emacs Lookup で Karak PDIC中日辞書を使う</a>
+        <a class="basic-alignment left" href="/blog/2013-03-21-goo.html" title="Previous Post: Emacs Lookup で Goo のWeb辞書を利用する。">&laquo; Emacs Lookup で Goo のWeb辞書を利用する。</a>
       
       
-        <a class="basic-alignment right" href="/blog/2013-03-16-thai.html" title="Next Post: Emacs Lookup で PDICタイ語辞書を使う">Emacs Lookup で PDICタイ語辞書を使う &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2013-03-23-math-symbols.html" title="Next Post: 数学用アルファベットをEmacsで入力する。">数学用アルファベットをEmacsで入力する。 &raquo;</a>
       
     </p>
   </footer>

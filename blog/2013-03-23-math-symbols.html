@@ -1,0 +1,437 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>数学用アルファベットをEmacsで入力する。 - A Riddle Wrapped in a Mystery</title>
+  <meta name="author" content="dotabata">
+
+  
+  <meta name="description" content="Emacs Lisp の math-symbols.el は、通常の文字をイタリック文字やフラク
+トゥール文字へ変換できる。 Unicode の数学文字 通常、イタリックや太字は文字符号ではなくフォントで区別するが、数式で使
+う文字のイタリックや太字は意味的に異なるため、 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://kawabata.github.com/blog/2013-03-23-math-symbols.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/data-table.css" rel="stylesheet" type="text/css" />
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="A Riddle Wrapped in a Mystery" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">A Riddle Wrapped in a Mystery</a></h1>
+  
+    <h2>中身はエニグマ・Emacs</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:kawabata.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">数学用アルファベットをEmacsで入力する。</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-23T23:00:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>
+Emacs Lisp の <a href="http://github.com/kawabata/math-symbols">math-symbols.el</a> は、通常の文字をイタリック文字やフラク
+トゥール文字へ変換できる。
+</p>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Unicode の数学文字</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+通常、イタリックや太字は文字符号ではなくフォントで区別するが、数式で使
+う文字のイタリックや太字は意味的に異なるため、別の文字符号でこれらを扱う。
+</p>
+
+<p>
+Unicode で符号化されているスタイルは以下のとおりである。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" >
+
+
+<colgroup>
+<col class="left"/>
+
+<col class="left"/>
+
+<col class="left"/>
+
+<col class="left"/>
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">styles / scripts</th>
+<th scope="col" class="left">alphabets</th>
+<th scope="col" class="left">greeks*</th>
+<th scope="col" class="left">numerals</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">bold</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">(bold) italic</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">(bold) fraktur</td>
+<td class="left">yes</td>
+<td class="left">no</td>
+<td class="left">no</td>
+</tr>
+
+<tr>
+<td class="left">(bold) script</td>
+<td class="left">yes</td>
+<td class="left">no</td>
+<td class="left">no</td>
+</tr>
+
+<tr>
+<td class="left">double-struck</td>
+<td class="left">yes</td>
+<td class="left">partial</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">monospace</td>
+<td class="left">yes</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">sans-serif (italic)</td>
+<td class="left">yes</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">sans-serif bold (italic)</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">subscript</td>
+<td class="left">partial</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+
+<tr>
+<td class="left">superscript</td>
+<td class="left">partial</td>
+<td class="left">no</td>
+<td class="left">yes</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+上の表において、アルファベットとは、大文字・小文字それぞれ２６文字ずつ
+である。また、ギリシャ文字は全て数学用ギリシャ文字記号とナブラ（ϵ, ϑ,
+ϰ, ϕ, ϱ, ϖ, ∇）を含む。
+</p>
+</div>
+</div>
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Unicode の符号とフォント</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Unicode では、数学用文字の符号は　U+1D400 からの SMP面で符号化されてい
+る。ただし、一部の早期にBMPで符号化されていた文字 (ℜなど) は別である。
+</p>
+
+<p>
+数学記号フォントは <a href="http://en.wikipedia.org/wiki/STIX_Fonts_project">STIX Font Project</a> が開発したフォントが主要なOSにはす
+でにインストール済である。
+</p>
+</div>
+</div>
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">init.el の設定</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+単に <code>(require 'math-sybols)</code> でインストールされる。
+</p>
+</div>
+</div>
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">文字のスタイル化</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+アルファベット等の文字をスタイル化したい場合は、領域を選択して、 <code>M-x
+math-symbols-XXXX-region</code> を実行する。たとえば abcde を 太字イタリック
+にしたい場合は、 <code>M-x math-symbols-bold-italic-region</code> とすれば良い。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" >
+
+
+<colgroup>
+<col class="left"/>
+
+<col class="left"/>
+
+<col class="left"/>
+</colgroup>
+<tbody>
+<tr>
+<td class="left">math-symbols-fraktur-region</td>
+<td class="left">abcde</td>
+<td class="left">𝔞𝔟𝔠𝔡𝔢</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-bold-region</td>
+<td class="left">abcde</td>
+<td class="left">𝐚𝐛𝐜𝐝𝐞</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-italic-region</td>
+<td class="left">abcde</td>
+<td class="left">𝑎𝑏𝑐𝑑𝑒</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-script-region</td>
+<td class="left">abcde</td>
+<td class="left">𝒶𝒷𝒸𝒹ℯ</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-double-struck-region</td>
+<td class="left">abcde</td>
+<td class="left">𝕒𝕓𝕔𝕕𝕖</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-sans-serif-region</td>
+<td class="left">abcde</td>
+<td class="left">𝖺𝖻𝖼𝖽𝖾</td>
+</tr>
+
+<tr>
+<td class="left">math-symbols-superscript-region</td>
+<td class="left">12345</td>
+<td class="left">¹²³⁴⁵</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+スタイル化した文字をもとに戻すには M-x ucs-normalize-NFKC-region を実行
+する。文字列を変換するには、 <code>(math-symbols-italic-region "hogehoge")</code>
+と実行する。文字列中に変換できない文字がある場合（空白含む）はエラーに
+なるが、 <code>C-u</code> プレフィックスで抑制できる。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-emacs-lisp">(math-symbols-fraktur-string <span style="color: #ffa07a;">"fghijk"</span>) &#9166;
+<span style="color: #ffa07a;">"&#120099;&#120100;&#120101;&#120102;&#120103;&#120104;"</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">dotabata</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-23T23:00:00+09:00" pubdate data-updated="true">Mar 23<span>rd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/emacs/'>emacs</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://kawabata.github.com/blog/2013-03-23-math-symbols.html" data-via="" data-counturl="http://kawabata.github.com/blog/2013-03-23-math-symbols.html" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-03-23-aj1-hd.html" title="Previous Post: 汎用電子とAdobe-Japan1のIVSを相互変換する。">&laquo; 汎用電子とAdobe-Japan1のIVSを相互変換する。</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013-03-23-math-symbols.html">数学用アルファベットをEmacsで入力する。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-03-23-aj1-hd.html">汎用電子とAdobe-Japan1のIVSを相互変換する。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-03-21-goo.html">Emacs Lookup で Goo のWeb辞書を利用する。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-03-19-ddch10.html">Emacs Lookup で Sony DD-CH10 の日中辞書を利用する。</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013-03-17-zsh-history.html">Emacs で zsh の ヒストリファイルを閲覧・編集する</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - dotabata -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
